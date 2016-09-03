@@ -68,10 +68,12 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Gson,数据解析," />
 
 
 
+
+  
 
 
   <link rel="alternate" href="/atom.xml" title="Jinwong001" type="application/atom+xml" />
@@ -86,19 +88,22 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="description" content="我们在开发过程中可以遇到json 数组中的具体的javaBean 不一致现象。例如：
+1234567&amp;#123;&amp;quot;list&amp;quot;:[&amp;#123;    &amp;quot;type&amp;quot;:a,    &amp;quot;data&amp;quot;:A,&amp;#125;,&amp;#123;    &amp;quot;type&amp;quot;:a,    &amp;quot;data&amp;quot;:B&amp;#125;]&amp;#125;
+如上">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2016/09/03/hello-world/index.html">
+<meta property="og:title" content="数组类型不同解析问题探究">
+<meta property="og:url" content="http://yoursite.com/2016/09/03/数组类型不同解析问题探究/index.html">
 <meta property="og:site_name" content="Jinwong001">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
-<meta property="og:updated_time" content="2016-09-03T07:12:53.000Z">
+<meta property="og:description" content="我们在开发过程中可以遇到json 数组中的具体的javaBean 不一致现象。例如：
+1234567&amp;#123;&amp;quot;list&amp;quot;:[&amp;#123;    &amp;quot;type&amp;quot;:a,    &amp;quot;data&amp;quot;:A,&amp;#125;,&amp;#123;    &amp;quot;type&amp;quot;:a,    &amp;quot;data&amp;quot;:B&amp;#125;]&amp;#125;
+如上">
+<meta property="og:updated_time" content="2016-09-03T13:15:45.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="twitter:title" content="数组类型不同解析问题探究">
+<meta name="twitter:description" content="我们在开发过程中可以遇到json 数组中的具体的javaBean 不一致现象。例如：
+1234567&amp;#123;&amp;quot;list&amp;quot;:[&amp;#123;    &amp;quot;type&amp;quot;:a,    &amp;quot;data&amp;quot;:A,&amp;#125;,&amp;#123;    &amp;quot;type&amp;quot;:a,    &amp;quot;data&amp;quot;:B&amp;#125;]&amp;#125;
+如上">
 
 
 
@@ -119,9 +124,9 @@ Quick">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/09/03/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/09/03/数组类型不同解析问题探究/"/>
 
-  <title> Hello World | Jinwong001 </title>
+  <title> 数组类型不同解析问题探究 | Jinwong001 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -274,7 +279,7 @@ Quick">
             
             
               
-                Hello World
+                数组类型不同解析问题探究
               
             
           </h1>
@@ -286,19 +291,38 @@ Quick">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-03T14:19:25+08:00" content="2016-09-03">
+            <time itemprop="dateCreated" datetime="2016-09-03T21:14:42+08:00" content="2016-09-03">
               2016-09-03
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/03/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/hello-world/" itemprop="commentsCount"></span>
+                <a href="/2016/09/03/数组类型不同解析问题探究/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/数组类型不同解析问题探究/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -321,15 +345,20 @@ Quick">
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <p>我们在开发过程中可以遇到json 数组中的具体的javaBean 不一致现象。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;&quot;list&quot;:[&#123;</div><div class="line">    &quot;type&quot;:a,</div><div class="line">    &quot;data&quot;:A,</div><div class="line">&#125;,&#123;</div><div class="line">    &quot;type&quot;:a,</div><div class="line">    &quot;data&quot;:B</div><div class="line">&#125;]&#125;</div></pre></td></tr></table></figure>
+<p>如上图所示，list中data的类型根据type的值而变化。像这种bean类型不一致问题,一直烦恼着开发者，现在简单介绍下，几种 可行的解决思路。</p>
+<h2 id="方法一：合并Bean"><a href="#方法一：合并Bean" class="headerlink" title="方法一：合并Bean"></a>方法一：合并Bean</h2><p>如果A与B中的字段不复杂，可以将A，B合并组合成一个比较大的Bean实例，他包括A和B中所有的字段。<br>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&#123;&quot;list&quot;:[&#123;</div><div class="line">    &quot;type&quot;:&quot;person&quot;,</div><div class="line">    &quot;data&quot;:&#123;</div><div class="line">          name:&quot;小王&quot;,</div><div class="line">          age:15,</div><div class="line">          gender:&quot;male&quot;</div><div class="line">    &#125;,</div><div class="line">&#125;,&#123;</div><div class="line">    &quot;type&quot;:&quot;dog&quot;,</div><div class="line">    &quot;data&quot;:&#123;</div><div class="line">          name:&quot;旺财&quot;,</div><div class="line">          age:2,</div><div class="line">          species:&quot;家狗&quot;</div><div class="line">    &#125;,</div><div class="line">&#125;]&#125;</div></pre></td></tr></table></figure></p>
+<p>合并之后的bean 为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public class combineBean &#123;</div><div class="line">    public String name;</div><div class="line">    public int age;</div><div class="line">    public String gender;</div><div class="line">    public String species;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="方法二：data字段根据type而更改"><a href="#方法二：data字段根据type而更改" class="headerlink" title="方法二：data字段根据type而更改"></a>方法二：data字段根据type而更改</h2><p>对于数组中data数据结构不同，那么字段就不统一命名成data，而是根据type的不同类型，服务器返回不同的字段，如：person，dog。那么对应的实体类应该是这样的形式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class ListBean&#123;</div><div class="line">    public String type;</div><div class="line">    public PersonBean person;</div><div class="line">    public DogBean dog;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>此方法前提条件就是需要服务器配合，要是你用现成的服务器那么这种方法完全就不用考虑了。<br>另外这种方法data中类型种类比较多，还会导致ListBean类比较大。而且json中字段不统一。</p>
+<h2 id="方法三：Json解析"><a href="#方法三：Json解析" class="headerlink" title="方法三：Json解析"></a>方法三：Json解析</h2><p>既然我们的data中的实体类，根据type类型进行改变，我们可以首先解析出来type字段对应的值，然后根据type值得类型，设置data不同的类型的实体类，然后再解析data中数据。<br>当然关于ListBean中类型统一，可以设置data类型的接口，或者父类，然后子类实现它：<br>list中data字段对应的基类，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public class DataBean&#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>当然你可以将data中子类中相同的字段提取出来，放在DataBean中。<br>有了DataBean这个虚拟的基类后，我们就可以统一ListBean的类型。<br>ListBean<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public class ListBean&#123;</div><div class="line">    public String type;</div><div class="line">    public DataBean data;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后让data中具体的不同子类去继承父类DataBean，实现我们需要的子类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class PersonBean extend DataBean&#123;</div><div class="line">    public String name;</div><div class="line">    public int age;</div><div class="line">    public String gender;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class DogBean extend DataBean&#123;</div><div class="line">    public String name;</div><div class="line">    public int age;</div><div class="line">    public String species ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们可以安装Json的解析的方法，首先将返回的json字符串慢慢解析成实体类，首先解析list，然后里面的type 我们根据type的类型然后解析data中不同类型的数据。<br>这个json解析唯一的难点就是必须首先要解析出type的数据，然后根据type才能确定data的不同的实体类型。</p>
+<p>其实Gson中可以自定义解析器；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">public class ListBeanDeserializer implements JsonDeserializer&lt;TypeResult&gt; &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public ListBean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException &#123;</div><div class="line">         if (!json.isJsonObject()) &#123;</div><div class="line">            return null;</div><div class="line">        &#125;</div><div class="line">        JsonObject obj = json.getAsJsonObject();</div><div class="line">        JsonArray asJsonArray = obj.get(&quot;list&quot;).getAsJsonArray();</div><div class="line">        ListBean list = new ListBean();</div><div class="line">        for (JsonElement jsonElement : asJsonArray) &#123;</div><div class="line">            JsonObject jsonOb = jsonElement.getAsJsonObject();</div><div class="line">            String type = jsonOb.get(&quot;type&quot;).getAsString();</div><div class="line">            if (TextUtils.equal(type,&quot;person&quot;)) &#123;</div><div class="line">                JsonObject child = jsonOb.get(&quot;data&quot;).getAsJsonObject();</div><div class="line">                String name = child.get(&quot;name&quot;).getAsString();</div><div class="line">                int age = child.get(&quot;age&quot;).getAsInt();</div><div class="line">                String gender = child.get(&quot;gender&quot;).getAsString();</div><div class="line">                list.data=new Person(name, age,gender);</div><div class="line">            &#125; else if(TextUtils.equal(type,&quot;dog&quot;)) &#123;</div><div class="line">                JsonObject child = jsonOb.get(&quot;data&quot;).getAsJsonObject();</div><div class="line">                String name = child.get(&quot;name&quot;).getAsString();</div><div class="line">                int age = child.get(&quot;age&quot;).getAsInt();</div><div class="line">                String species = child.get(&quot;species&quot;).getAsString();</div><div class="line">                list.data=new Person(name, age,species);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return list;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用解析器解析：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">protected ArrayList&lt;ListBean&gt; deserializerResponse(@NonNull Response response) throws IOException &#123;</div><div class="line">                      String json = null;</div><div class="line">                      if (response != null &amp;&amp; response.body() != null) &#123;</div><div class="line">                          json = response.body().string();</div><div class="line">                      &#125;</div><div class="line">                      GsonBuilder gsonBuilder = new GsonBuilder();</div><div class="line">                      gsonBuilder.registerTypeAdapter(ListBean.class, new ListBeanDeserializer());</div><div class="line">                      Gson gson = gsonBuilder.create();</div><div class="line">                      return gson.fromJson(TextUtils.isEmpty(json) ? json : json.trim(), new TypeToken&lt;ArrayList&lt;ListBean&gt;&gt;() &#123;</div><div class="line">                      &#125;.getType());</div><div class="line">                  &#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -350,18 +379,26 @@ Quick">
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Gson/" rel="tag">#Gson</a>
+          
+            <a href="/tags/数据解析/" rel="tag">#数据解析</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/09/03/《App研发录》读书笔记——Android 知识点汇总/" rel="next" title="《Android》读书笔记">
+                <i class="fa fa-chevron-left"></i> 《Android》读书笔记
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/09/03/懒加载/" rel="prev" title="懒加载">
-                懒加载 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -387,8 +424,8 @@ Quick">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/09/03/hello-world/"
-           data-title="Hello World" data-url="http://yoursite.com/2016/09/03/hello-world/">
+      <div class="ds-thread" data-thread-key="2016/09/03/数组类型不同解析问题探究/"
+           data-title="数组类型不同解析问题探究" data-url="http://yoursite.com/2016/09/03/数组类型不同解析问题探究/">
       </div>
     
   </div>
@@ -433,13 +470,27 @@ Quick">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
 
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
           
 
         </nav>
@@ -501,7 +552,7 @@ Quick">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法一：合并Bean"><span class="nav-number">1.</span> <span class="nav-text">方法一：合并Bean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法二：data字段根据type而更改"><span class="nav-number">2.</span> <span class="nav-text">方法二：data字段根据type而更改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法三：Json解析"><span class="nav-number">3.</span> <span class="nav-text">方法三：Json解析</span></a></li></ol></div>
             
           </div>
         </section>

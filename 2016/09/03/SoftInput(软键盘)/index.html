@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="懒加载," />
+  <meta name="keywords" content="软键盘," />
 
 
 
@@ -86,19 +86,19 @@
 
 
 
-<meta name="description" content="最近在重构公司公司的主页，其中用到了懒加载，所以找了网上的懒加载的介绍的博客，读了好几篇关于懒加载的文件，发现不是讲解太简单，就是代码不够清晰，而且在懒加载的实现原理上没有透彻的讲清楚，在实际应用实践中会发现各种不同问题。小弟不才，愿意认真分析懒加载的原理实现与应用，希望对各位看官有些收获。
-在使用viewpager（或其他容器）与多个Fragment来组合使用，ViewPager 会默认一次加载">
+<meta name="description" content="软键盘在Android中是重要的输入设备，如果我们对其进行友好化优化的话，对提高用户体验有大大的帮助。
+1. InputMethodManagerInputMethodManager是软键盘的管理类，我们可以用它来控制软键盘的展开、隐藏等操作。123456InputMethodManager imm = (InputMethodManager) getActivity().getSystemSer">
 <meta property="og:type" content="article">
-<meta property="og:title" content="懒加载">
-<meta property="og:url" content="http://yoursite.com/2016/09/03/懒加载/index.html">
+<meta property="og:title" content="SoftInput(软键盘)">
+<meta property="og:url" content="http://yoursite.com/2016/09/03/SoftInput(软键盘)/index.html">
 <meta property="og:site_name" content="Jinwong001">
-<meta property="og:description" content="最近在重构公司公司的主页，其中用到了懒加载，所以找了网上的懒加载的介绍的博客，读了好几篇关于懒加载的文件，发现不是讲解太简单，就是代码不够清晰，而且在懒加载的实现原理上没有透彻的讲清楚，在实际应用实践中会发现各种不同问题。小弟不才，愿意认真分析懒加载的原理实现与应用，希望对各位看官有些收获。
-在使用viewpager（或其他容器）与多个Fragment来组合使用，ViewPager 会默认一次加载">
-<meta property="og:updated_time" content="2016-09-03T13:01:14.000Z">
+<meta property="og:description" content="软键盘在Android中是重要的输入设备，如果我们对其进行友好化优化的话，对提高用户体验有大大的帮助。
+1. InputMethodManagerInputMethodManager是软键盘的管理类，我们可以用它来控制软键盘的展开、隐藏等操作。123456InputMethodManager imm = (InputMethodManager) getActivity().getSystemSer">
+<meta property="og:updated_time" content="2016-09-03T13:08:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="懒加载">
-<meta name="twitter:description" content="最近在重构公司公司的主页，其中用到了懒加载，所以找了网上的懒加载的介绍的博客，读了好几篇关于懒加载的文件，发现不是讲解太简单，就是代码不够清晰，而且在懒加载的实现原理上没有透彻的讲清楚，在实际应用实践中会发现各种不同问题。小弟不才，愿意认真分析懒加载的原理实现与应用，希望对各位看官有些收获。
-在使用viewpager（或其他容器）与多个Fragment来组合使用，ViewPager 会默认一次加载">
+<meta name="twitter:title" content="SoftInput(软键盘)">
+<meta name="twitter:description" content="软键盘在Android中是重要的输入设备，如果我们对其进行友好化优化的话，对提高用户体验有大大的帮助。
+1. InputMethodManagerInputMethodManager是软键盘的管理类，我们可以用它来控制软键盘的展开、隐藏等操作。123456InputMethodManager imm = (InputMethodManager) getActivity().getSystemSer">
 
 
 
@@ -119,9 +119,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/09/03/懒加载/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/09/03/SoftInput(软键盘)/"/>
 
-  <title> 懒加载 | Jinwong001 </title>
+  <title> SoftInput(软键盘) | Jinwong001 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -274,7 +274,7 @@
             
             
               
-                懒加载
+                SoftInput(软键盘)
               
             
           </h1>
@@ -286,7 +286,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-03T14:49:07+08:00" content="2016-09-03">
+            <time itemprop="dateCreated" datetime="2016-09-03T20:55:44+08:00" content="2016-09-03">
               2016-09-03
             </time>
           </span>
@@ -316,8 +316,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/03/懒加载/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/懒加载/" itemprop="commentsCount"></span>
+                <a href="/2016/09/03/SoftInput(软键盘)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/SoftInput(软键盘)/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -340,18 +340,136 @@
       
 
       
-        <p>最近在重构公司公司的主页，其中用到了懒加载，所以找了网上的懒加载的介绍的博客，读了好几篇关于懒加载的文件，发现不是讲解太简单，就是代码不够清晰，而且在懒加载的实现原理上没有透彻的讲清楚，在实际应用实践中会发现各种不同问题。小弟不才，愿意认真分析懒加载的原理实现与应用，希望对各位看官有些收获。</p>
-<p>在使用viewpager（或其他容器）与多个Fragment来组合使用，ViewPager 会默认一次加载当前页面前后隔一个页面，即使设置setofflimit（0）也无效果，也会预加载。这样把我们看不到的页面的数据也加载了，大大降低了性能，浪费初始化资源。然而我们就采用懒加载技术，只让用户看到的页面才会加载他的数据，大大提高效率。</p>
-<p>主要的方法是Fragment中的setUserVisibleHint()，此方法会在onCreateView(）之前执行，当viewPager中fragment改变可见状态时也会调用,当fragment 从可见到不见，或者从不可见切换到可见，都会调用此方法，使用getUserVisibleHint() 可以返回fragment是否可见状态。</p>
-<p>onLazyLoad() 加载数据必须满足三个条件：</p>
-<ul>
-<li>getUserVisibleHint()会返回是否可见状态，这是fragment实现懒加载的关键,只有fragment 可见才会调用onLazyLoad() 加载数据。</li>
-<li>isPrepared参数在系统调用onActivityCreated时设置为true,这时onCreateView方法已调用完毕(一般我们在这方法里执行findviewbyid等方法),确保 onLazyLoad()方法不会报空指针异常。</li>
-<li>isLazyLoaded确保ViewPager来回切换时BaseFragment的initData方法不会被重复调用，onLazyLoad在该Fragment的整个生命周期只调用一次,第一次调用onLazyLoad()方法后马上执行 isLazyLoaded = true。</li>
+        <p>软键盘在Android中是重要的输入设备，如果我们对其进行友好化优化的话，对提高用户体验有大大的帮助。</p>
+<h3 id="1-InputMethodManager"><a href="#1-InputMethodManager" class="headerlink" title="1. InputMethodManager"></a>1. InputMethodManager</h3><p>InputMethodManager是软键盘的管理类，我们可以用它来控制软键盘的展开、隐藏等操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);</div><div class="line"> //隐藏软键盘</div><div class="line"> imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);</div><div class="line"> //切换键盘</div><div class="line">  if(imm.isActive())&#123;                 imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,InputMethodManager.HIDE_NOT_ALWAYS);</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="2-windowSoftInputMode"><a href="#2-windowSoftInputMode" class="headerlink" title="2. windowSoftInputMode"></a>2. windowSoftInputMode</h3><p>WindowSoftInputMode是控制软键盘的启动模式，一般在theme 或者manifest中设置</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stateUnspecified</td>
+<td>软键盘的状态(是否它是隐藏或可见)没有被指定。系统将选择一个合适的状态或依赖于主题的设置。这个是为了软件盘行为默认的设置。</td>
+</tr>
+<tr>
+<td>stateUnchanged</td>
+<td>软键盘被保持无论它上次是什么状态，是否可见或隐藏，当主窗口出现在前面时。</td>
+</tr>
+<tr>
+<td>stateHidden</td>
+<td>当用户选择该Activity时，软键盘被隐藏——也就是，当用户确定导航到该Activity时，而不是返回到它由于离开另一个Activity。</td>
+</tr>
+<tr>
+<td>stateAlwaysHidden</td>
+<td>软键盘总是被隐藏的，当该Activity主窗口获取焦点时</td>
+</tr>
+<tr>
+<td>stateVisible</td>
+<td>软键盘是可见的，当那个是正常合适的时(当用户导航到”Activity主窗口时)</td>
+</tr>
+<tr>
+<td>stateAlwaysVisible</td>
+<td>当用户选择这个Activity时，软键盘是可见的——也就是，也就是，当用户确定导航到该Activity时，而不是返回到它由于离开另一个Activity。</td>
+</tr>
+<tr>
+<td>adjustUnspecified</td>
+<td>它不被指定是否该Activity主窗口调整大小以便留出软键盘的空间，或是否窗口上的内容得到屏幕上当前的焦点是可见的。系统将自动选择这些模式中一种主要依赖于是否窗口的内容有任何布局视图能够滚动他们的内容。如果有这样的一个视图，这个窗口将调整大小，这样的假设可以使滚动窗口的内容在一个较小的区域中可见的。这个是主窗口默认的行为设置。</td>
+</tr>
+<tr>
+<td>adjustResize</td>
+<td>该Activity主窗口总是被调整屏幕的大小以便留出软键盘的空间</td>
+</tr>
+<tr>
+<td>adjustPan</td>
+<td>该Activity主窗口并不调整屏幕的大小以便留出软键盘的空间。相反，当前窗口的内容将自动移动以便当前焦点从不被键盘覆盖和用户能总是看到输入内容的部分。这个通常是不期望比调整大小，因为用户可能关闭软键盘以便获得与被覆盖内容的交互操作。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>解决Andriod软键盘出现把原来的布局给顶上去的方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">//在mainfest.xml中，对那个Activity加：</div><div class="line">&lt;activity android:name=&quot;.activity.HomeActivity&quot;</div><div class="line">          android:windowSoftInputMode=&quot;adjustPan|stateHidden&quot;/&gt;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="3-WindowManager-LayoutParams-softInputMode"><a href="#3-WindowManager-LayoutParams-softInputMode" class="headerlink" title="3.WindowManager.LayoutParams.softInputMode"></a>3.WindowManager.LayoutParams.softInputMode</h3><p>WindowManager.LayoutParams.softInputMode 是Window上的属性，当设置其属性时，如果之前在主题上设置上windowSoftInputMode将会override。如果采用其他许多办法无法关闭显示软键盘，可以设置WindowManager.LayoutParams.softInputMode，将会起到想不到的好效果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);</div></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>softInputMode</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SOFT_INPUT_MASK_STATE</td>
+<td>软输入区域是否可见</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_UNSPECIFIED</td>
+<td>未指定状态</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_UNCHANGED</td>
+<td>不要修改软输入法区域的状态</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_HIDDEN</td>
+<td>隐藏输入法区域（当用户进入窗口时）</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_ALWAYS_HIDDEN</td>
+<td>当窗口获得焦点时，隐藏输入法区域。</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_VISIBLE</td>
+<td>显示输入法区域（当用户进入窗口时）</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_ALWAYS_VISIBLE</td>
+<td>当窗口获得焦点时，显示输入法区域</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_MASK_ADJUST</td>
+<td>窗口应当主动调整，以适应软输入窗口</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_ADJUST_UNSPECIFIED</td>
+<td>未指定状态，系统将根据窗口内容尝试选择一个输入法样式</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_ADJUST_RESIZE</td>
+<td>当输入法显示时，允许窗口重新计算尺寸，使内容不被输入法所覆盖。不可与SOFT_INPUT_ADJUSP_PAN混合使用；如果两个都没有设置，系统将根据窗口内容自动设置一个选项</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_ADJUST_PAN</td>
+<td>输入法显示时平移窗口。它不需要处理尺寸变化，框架能够移动窗口以确保输入焦点可见。不可与SOFT_INPUT_ADJUST_RESIZE混合使用；如果两个都没有设置，系统将根据窗口内容自动设置一个选项。</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_IS_FORWARD_NAVIGATION</td>
+<td>当用户转至此窗口时，由系统自动设置，所以你不要设置它。当窗口显示之后该标志自动清除</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4-InputType"><a href="#4-InputType" class="headerlink" title="4.InputType"></a>4.InputType</h3><p>我们使用EditText有时为了提高用户体验，在弹出软键盘时需要设置键盘的面板状况，有时需要展示中文键盘，数字键盘，英文键盘等等。<br>可以设置InputType。EditText的InputType可以输入两种类型，一种EditorInfo，一种是InputType。EditorInfo是InputType实现类<br>Android并没有提供设置默认的输入状态的接口，但我们可以通过如下方法一样能够达到想要的效果：<br>InputType可以在Xml设置，或者直接在代码中设置。<br>默认数字键盘<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mEditText.setInputType(EditorInfo.TYPE_CLASS_NUMBER);</div></pre></td></tr></table></figure></p>
+<p>默认中文键盘<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mEditText.setInputType(EditorInfo.TYPE_CLASS_TEXT);</div></pre></td></tr></table></figure></p>
+<p>默认英文键盘<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mEditText.setInputType(EditorInfo.TYPE_TEXT_VARIATION_URI);</div></pre></td></tr></table></figure></p>
+<h3 id="5-ImeOption"><a href="#5-ImeOption" class="headerlink" title="5.ImeOption"></a>5.ImeOption</h3><p>改变输入法中回车按钮的显示内容，如果回车按钮是执行搜索功能，则回车按钮上显示”搜索”，如果是执行发送功能，则显示”发送”,如果是下一步，则显示”下一步”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">*</div><div class="line">* IME_ACTION_SEARCH 搜索</div><div class="line">* IME_ACTION_SEND 发送</div><div class="line">* IME_ACTION_NEXT 下一步</div><div class="line">* IME_ACTION_DONE 完成</div><div class="line">*/</div><div class="line">mInputEditTxt.setImeOptions(EditorInfo.IME_ACTION_SEARCH);</div></pre></td></tr></table></figure></p>
+<h3 id="6-关闭软键盘的N中方法"><a href="#6-关闭软键盘的N中方法" class="headerlink" title="6.关闭软键盘的N中方法"></a>6.关闭软键盘的N中方法</h3><ul>
+<li><p>方式一：InputMethodManager</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">EditText edit=(EditText)findViewById(R.id.edit)；</div><div class="line">        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)；</div><div class="line">          imm.hideSoftInputFromWindow(edit.getWindowToken(),0);</div></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：clearFocus 失去焦点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">EditText edit=(EditText)findViewById(R.id.edit);</div><div class="line">           edit.clearFocus();</div></pre></td></tr></table></figure>
+</li>
+<li><p>方式三：InputType 默认EditText始终不弹出软键盘</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">EditText edit=(EditText)findViewById(R.id.edit);</div><div class="line">       edit.setInputType(InputType.TYPE_NULL);</div></pre></td></tr></table></figure>
+</li>
+<li><p>方式四：setSoftInputMode为Hidden</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);</div></pre></td></tr></table></figure>
+</li>
 </ul>
-<p>另外我们在BaseLazyFragment 中需要在onActivityCreated()及setUserVisibleHint()方法中都调了一次lazyLoad() 方法。如果仅仅在setUserVisibleHint()调用lazyLoad()，当默认首页首先加载时会导致viewPager的首页第一次展示时没有数据显示，切换一下才会有数据。因为首页fragment的setUserVisible()在onActivityCreated() 之前调用，此时isPrepared为false 导致首页fragment 没能调用onLazyLoad()方法加载数据。<br>实现代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 懒加载fragment基类</div><div class="line"> * Created by wanny on 16/7/18.</div><div class="line"> */</div><div class="line">public abstract class BaseLazyFragment extends BaseFragment &#123;</div><div class="line">    /**</div><div class="line">     * 懒加载过</div><div class="line">     */</div><div class="line">    private boolean isLazyLoaded;</div><div class="line"></div><div class="line">    private boolean isPrepared;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onActivityCreated(@Nullable Bundle savedInstanceState) &#123;</div><div class="line">        super.onActivityCreated(savedInstanceState);</div><div class="line">        isPrepared = true;</div><div class="line">        //只有Fragment onCreateView好了，</div><div class="line">        //另外这里调用一次lazyLoad(）</div><div class="line">        lazyLoad();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void setUserVisibleHint(boolean isVisibleToUser) &#123;</div><div class="line">        super.setUserVisibleHint(isVisibleToUser);</div><div class="line">        lazyLoad();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 调用懒加载</div><div class="line">     */</div><div class="line"></div><div class="line">    private void lazyLoad() &#123;</div><div class="line">        if (getUserVisibleHint() &amp;&amp; isPrepared &amp;&amp; !isLazyLoaded) &#123;</div><div class="line">            onLazyLoad();</div><div class="line">            isLazyLoaded = true;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @UiThread</div><div class="line">    public abstract void onLazyLoad();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后我们再继承这个BaseLazyFragment 实现onLazyLoad() 方法就行。他会自动控制当fragment 展现出来时，才会加载数据。。</p>
+<h3 id="7-KEYCODE"><a href="#7-KEYCODE" class="headerlink" title="7.KEYCODE"></a>7.KEYCODE</h3><p>在软键盘输入中我们需要监听我们按的键，我们可以用OnkeyListener监听按键。例如<br>KeyEvent.KEYCODE_Z、KeyEvent.KEYCODE_ENTER等按键。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">mInputEditTxt.setOnKeyListener(new OnKeyListener() &#123;</div><div class="line">    @Override</div><div class="line">    public boolean onKey(View v, int keyCode, KeyEvent event) &#123;</div><div class="line">        if (keyCode == KeyEvent.KEYCODE_ENTER &amp;&amp; event.getAction() == KeyEvent.ACTION_UP) &#123;</div><div class="line">            System.out.println(&quot;手指弹起时执行确认功能&quot;);</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -374,7 +492,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/懒加载/" rel="tag">#懒加载</a>
+            <a href="/tags/软键盘/" rel="tag">#软键盘</a>
           
         </div>
       
@@ -383,12 +501,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/09/03/APK 瘦身/" rel="next" title="APK 瘦身探究">
+                <i class="fa fa-chevron-left"></i> APK 瘦身探究
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/09/03/ABD 实用技巧/" rel="prev" title="ADB 实用技巧">
-                ADB 实用技巧 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/09/03/断点调试/" rel="prev" title="断点调试">
+                断点调试 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -415,8 +537,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/09/03/懒加载/"
-           data-title="懒加载" data-url="http://yoursite.com/2016/09/03/懒加载/">
+      <div class="ds-thread" data-thread-key="2016/09/03/SoftInput(软键盘)/"
+           data-title="SoftInput(软键盘)" data-url="http://yoursite.com/2016/09/03/SoftInput(软键盘)/">
       </div>
     
   </div>
@@ -543,7 +665,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-InputMethodManager"><span class="nav-number">1.</span> <span class="nav-text">1. InputMethodManager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-windowSoftInputMode"><span class="nav-number">2.</span> <span class="nav-text">2. windowSoftInputMode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-WindowManager-LayoutParams-softInputMode"><span class="nav-number">3.</span> <span class="nav-text">3.WindowManager.LayoutParams.softInputMode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-InputType"><span class="nav-number">4.</span> <span class="nav-text">4.InputType</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-ImeOption"><span class="nav-number">5.</span> <span class="nav-text">5.ImeOption</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-关闭软键盘的N中方法"><span class="nav-number">6.</span> <span class="nav-text">6.关闭软键盘的N中方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-KEYCODE"><span class="nav-number">7.</span> <span class="nav-text">7.KEYCODE</span></a></li></ol></div>
             
           </div>
         </section>

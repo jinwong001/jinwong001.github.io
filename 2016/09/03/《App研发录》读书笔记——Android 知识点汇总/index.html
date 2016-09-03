@@ -1,0 +1,920 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="《APP 研发录》," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jinwong001" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="&amp;ensp;&amp;ensp; 我自认为是一个很懒的人，虽然最近一直在读些书，可是读完就完了，没有留下什么。之前一直计划每读一本书，做些读书笔记，但不了了之。现在想从现在开始养成良好的读书写笔记的习惯，为了以下三个目标而努力：
+
+加深印象。虽然我知道就算自己认真读完，并且做好标注，记好笔记，该忘记的还是得忘记，而且能记得1%的内容就算天赋异人了，可还是希望能自己做些努力，认真记些书中的精华。
+加强对书籍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Android》读书笔记">
+<meta property="og:url" content="http://yoursite.com/2016/09/03/《App研发录》读书笔记——Android 知识点汇总/index.html">
+<meta property="og:site_name" content="Jinwong001">
+<meta property="og:description" content="&amp;ensp;&amp;ensp; 我自认为是一个很懒的人，虽然最近一直在读些书，可是读完就完了，没有留下什么。之前一直计划每读一本书，做些读书笔记，但不了了之。现在想从现在开始养成良好的读书写笔记的习惯，为了以下三个目标而努力：
+
+加深印象。虽然我知道就算自己认真读完，并且做好标注，记好笔记，该忘记的还是得忘记，而且能记得1%的内容就算天赋异人了，可还是希望能自己做些努力，认真记些书中的精华。
+加强对书籍">
+<meta property="og:updated_time" content="2016-09-03T13:06:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Android》读书笔记">
+<meta name="twitter:description" content="&amp;ensp;&amp;ensp; 我自认为是一个很懒的人，虽然最近一直在读些书，可是读完就完了，没有留下什么。之前一直计划每读一本书，做些读书笔记，但不了了之。现在想从现在开始养成良好的读书写笔记的习惯，为了以下三个目标而努力：
+
+加深印象。虽然我知道就算自己认真读完，并且做好标注，记好笔记，该忘记的还是得忘记，而且能记得1%的内容就算天赋异人了，可还是希望能自己做些努力，认真记些书中的精华。
+加强对书籍">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/03/《App研发录》读书笔记——Android 知识点汇总/"/>
+
+  <title> 《Android》读书笔记 | Jinwong001 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?2043ed17e74701fcc36daf815553ed51";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jinwong001</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Android》读书笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-03T20:56:41+08:00" content="2016-09-03">
+              2016-09-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/03/《App研发录》读书笔记——Android 知识点汇总/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/《App研发录》读书笔记——Android 知识点汇总/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&ensp;&ensp; 我自认为是一个很懒的人，虽然最近一直在读些书，可是读完就完了，没有留下什么。之前一直计划每读一本书，做些读书笔记，但不了了之。现在想从现在开始养成良好的读书写笔记的习惯，为了以下三个目标而努力：</p>
+<ul>
+<li>加深印象。虽然我知道就算自己认真读完，并且做好标注，记好笔记，该忘记的还是得忘记，而且能记得1%的内容就算天赋异人了，可还是希望能自己做些努力，认真记些书中的精华。</li>
+<li>加强对书籍的整体架构的理解。我在读书的过程中有一个习惯，遇到自己觉得比较好的地方就画些线，做些笔记，但是他们都是散落在书中各个不同的角落，希望通过写读书笔记将他们与书的章落结构串起来，从整体把握他们。</li>
+<li>培养自己的书写能力。自从我们进入社会以后，好像从来都没有认真的写过一些东西，每年的做的最认真也是年终总结，可是也是从照抄网上的模板，自己的书写能力一直在退步。希望以后借写读书笔记的这个机会，多多写些东西，慢慢培养自己的能力。</li>
+<li>培养良好的读书习惯，其实这是我最大的目标，我这人，人懒，坏毛笔多，希望从现在开始培养一些能说出口的好习惯。</li>
+</ul>
+<p>《App研发录》这部书是包建强写的，说来也巧，在读这边书之前在看池建强的《Mac 人生元编程》 ，所以读这本书的时候，将这两个建强搞混。这本书花了我一周多一点的时间看完。昨天晚看完久久不能寐，一是惊叹这本书的干货太多，这本书不同于市面上其他的Android 教程，给你讲一堆API方法，Android 基础，作者从一个APP团队的负责人的角度高屋建瓴的讲解App框架设计，Bug收集汇总分析，团队建设，项目管理等等方面，而且都是非常适合APP的项目管理者的实在的经验。二是敬佩作者进入Android 领域也不是很久，但是见解非凡，经验老道，感到自己做Android 也快两年了，为啥还达到没有作者的一半高度。唉，看来自己之前的两年过得太轻松了，每天混混日子，自以为懂些Android 技术，能实现产品交代的功能，就得过且过，没有好好的利用好时间，认真学习，加速成长。</p>
+<p>题外话太多了，自己觉得有些东西是多余的，是自己的无病呻吟，各位看官，可以忽略不看，直接看下面的干货。</p>
+<hr>
+<p>##APP 框架</p>
+<p>###1. 项目结构<br>非常赞同作者的观点，我们App必须具有良好的包结构，按照一定规则将不同的类放到不同的地方，目前市面上有两者结构，一种是按照类的类型进行归纳放置，例如Activity 类放一起，adapter 放一起，以此类推；另外一种是按照业务逻辑，例如主页页面逻辑放在一个小包中，用户信息逻辑放在一个小包中，当然小包中可以再分包。<br>两种都可以，但必须具有一致项目结构，不要弄得不三不四，类到处放，没有一定规则</p>
+<p>###2. baseActivity、BaseAdapter基类管理</p>
+<p>###3. 网络框架，封装好网络层。<br>不要使用AsyTask，因为他在4.x 版本中是串行，效率不高，而且当请求线程数达到AsyTask上线时会有问题。建议用TheadPoolExecutor+Runnable+Handler 的方式进行封装。<br>统一预处理成功及失败回掉，</p>
+<p>###4. 数据缓存策略：<br>为减少请求网络数据次数，有必要进行数据缓存，将请求网络的数据，缓存在手机上，为保证数据即时性，设置缓存时间，而且可以根据业务需求对不同数据设置不同的缓存时间，有的数据不咋改变可以设置长些时间，有些数据经常变动，对即时性要求比较高，缓存时间设置短些，设置可以不设置缓存。<br>另外必须有接口能够让用户强制更新数据，例如用户下来刷新，就不要使用缓存中数据，而是直接请求最新的网络数据</p>
+<p>###5. 用户登录</p>
+<ul>
+<li>考虑用户登录各种场景<br>一种用户开始登录然后进入主页面，二种用户没有登录数据不能进入下一界面，需要跳转登录页，再跳回来，三种用户请求网路但是用户身份验证失败需要跳到登录注册页。前面一种好说，后面两种可以设置回调进行处理，有种情况可能比较麻烦，例如用户进入某一页面没有用户信息，需要跳回登录注册页，可是登录注册完成后又得填资料补全身份信息等最后，经过一系列流程后才跳回原始的页面。<br>```<br> //起始页面，可能需要跳转登录注册页<br> if(User.isLogin()){<pre><code> //do something
+}else{
+</code></pre> Intent intent=new Intent(this,LoginActivity.class){<br> intent.putExtra(AppConstant.NeedCallback,true);<br> startActivityForResult(intent,LOGIN_REDIEECT_INSIDE);<pre><code>}
+</code></pre> }</li>
+</ul>
+<p>@Override<br>public void onActivityResult(int requestCode, int resultCode,Intent data){<br>    if(resultCode!=Activity.RESULT_OK){<br>        return;<br>      }<br>    swith(requestCode){<br>       case LOGIN_REDIEECT_INSIDE:<br>           //  do something<br>            break;<br>       default:<br>       break;<br>    }<br>}</p>
+<p>//登录页面 LoginActivity<br>if(getIntent.getBooleanExtra(AppConstant.NeedCallback){<br>    setResult(Activity.RESULT_OK);<br>    finish();<br>}ese{<br>   //do otherthing<br>}<br>```    </p>
+<ul>
+<li>用户信息存储风险<br>用户的信息我们在app中多处用到，我们建议将他持久化处理，并且将其文件存储起来。要考虑我们用户信息失效问题。<br>另外用户的密码必须经过加密处理，我建议客户端将用户输入的密码加密处理后才传给服务端，服务端对传过来的密码也进行一层加密，以保证用户安全。另外我不建议存储用户的密码，即时是加密后的密码，可以使用Token机制（有的也叫Cookie机制），储存Token，这个Token可以当成用户身份的唯一性标识。用户客户端登陆后，服务器生成Token，当用户调用与用户信息相关的接口时，将用户ID 与Token 传给服务器，服务器首先根据Token与ID验证用户正确性，然后才将数据传给用户</li>
+<li>自动登陆功能<br>自动登陆功能需要储存用户的密码，需要注意密码的安全性问题。而且自动登陆与输验证码相斥问题。</li>
+<li>使用Cookie方法保证用户信息安全<br>当用户登录成功后，从后台获取到Cookie,Cookie在Http-Respose的头文件中，我们将他取出来，下次联网请求数据时将Cookie放入Http-Request的头文件中，如果请求数据与用户信息相关，服务器验证身份成功才返回数据。每次请求后客户端必须更新Cookie。另外注意Cookie过期问题，及用户注销后，需要将用户信息清空。</li>
+</ul>
+<p>###6. 防止黑客刷库</p>
+<ul>
+<li>第一种方法，登录时添加验证码</li>
+<li>第二种方法，登录三次失败后才需要用户输入验证码</li>
+<li>第三种方法，后台检测某一IP在短时间内频繁访问登录接口，然后用户输入验证码。<br>###7. 时间校准问题<br>如果后台或者用户端对时间准确性要求比较高的话，需要考虑这个问题。因为我们用户手机上的时间不是非常准确，一般都有一定的偏差。作者建议后台采用UTC时间，包括入参和返回值，返回值为long类型。客户端根据得到的UTC时间换算成本地时间。如果需要用户传给后台准确的时间，这是个大问题。用户那边其实很难得到比较准确的时间，除了用户时区问题，另外还有与准确时间偏差问题。可以用户的时间传给后台，后台比对差值，然后每次不停的比对减少误差，最后找到一个准确值。<br>###8. gzip 压缩<br>一般http采用gzip压缩，减少传输量，缩短传输时间。但是在HttpRespose 需要判断content-encoding字段中是否有gzip,判断后台是否经过gzip压缩。<br>###9. Freso的三级缓存<br>第一层：Bitmap 缓存<br>在Android 5.0中，考虑内存管理有了很大的进步，所以讲Bitmap 缓存在Java堆中，在之前版本中Bitmap缓存在ashmen中，当app切换到后台时，Bitmap缓存将会被清空<br>第二层：内存缓存<br>内层缓存中存储了图片原始压缩的格式，从内层缓存中取出图片，在显示之前必须进行解码。当app切换到后台，内存缓存也被清空<br>第三层：磁盘缓存，也叫本地缓存<br>本地存储图片原始压缩格式，显示之前也需先解码，当app切换后台，磁盘缓存不会丢失。<br>###10. 流量优化</li>
+<li>数据压缩（常见gzip）</li>
+<li>使用更好的数据传递协议。例如比JSON更好的ProtoBuffer</li>
+<li>合并api,防止客户端频繁调用api请求</li>
+<li>http无状态短连接改成TCP长连接。但是需要对服务器及后台有要求</li>
+<li>页面销毁需要取消之前的网络请求</li>
+<li>增加重试机制，例如get请求失败重试三次，但是需要防止用户重复下单，重复发布评论，重复付款等，</li>
+<li>图片请求附带尺寸参数，服务端更加尺寸传输最近尺寸的图片。</li>
+<li>低流量模式，降低图片质量或尺寸，甚至可以不返回图片的极速模式<br>###11.增量更新<br>app中的资料包，城市列表等素材可以使用增量更新。每次发版素材保证是最新的版本，当有更新时，首先对比本地素材版本号与线上素材版本号，后台根据他们版本号返回对应的更新内容。客户端收到后解压。增量更新的内容有三部分：需要删除的数据、不变的数据但是需要修改、新增的数据，用户根据情况各自处理<br>###12. Html 互换技术<br>当我们的app原生页面遇到bug,可以马上切换到Html页面替换。</li>
+</ul>
+<p>##Crash及持续集成</p>
+<p>###1. Crash 的收集<br>收集的渠道</p>
+<ul>
+<li>集成第三方统计工具。友盟、leadCould</li>
+<li>集成Bug管理工具，例如Bugly,BugTag等</li>
+<li>app本地收集，将错误日志记录在本地，然后发送到后台服务器，另外需要标注Crash时间，Crash名称，详细信息，手机版本，设备号，渠道号，当前网络类型，内存使用情况等等。<br>本地bug收集需要用到<code>UncaughtExceptionHandler</code>这个类<br>###2.Crash经验</li>
+</ul>
+<ol>
+<li>窗体泄露问题，主要是想关闭弹出框时，他所承载的activity 不在了，而activity关闭了，没有及时dismiss会导致泄露窗口句柄，不要在子线程操作对话框，另外让对话框是Activity成员变量，活跃在onCreate()和onDestroy()两个方法之间，或者建议使用DialogFragment。</li>
+<li>只有activity 才能添加窗体，传给Dialog的Context 要为activity。</li>
+<li>不要相信api 返回数据，必须做非空判断，类型异常等容错处理</li>
+<li>遍历集合时不能删除集合中数据，否则发生崩溃。另外多个线程同时操作同一集合数据也可能会发生崩溃</li>
+<li>当Service或者BroadcastReceiver等中当context 为非activity 跳转activity需要加<code>Intent.FLAG_ACITIVITY_NEW_TASK</code>。</li>
+<li>当fragment还没有attach 到activity中调用<code>getResource().getString()</code>会报错，建议在调用之前加上<code>isAdd()</code>判断</li>
+<li>Parcelable 反序列化时，例如<code>a=in.readParcelable(null)</code>会可能抛出<code>BadParcelabeException:ClassNotFoundException when unmarshalling...</code>改成这样就行<code>a=in.readParcelable(A.class.getClassLoader)</code>。</li>
+<li>List<t> 没有实现add()、remove(）方法， 使用这两个方法会抛异常，特别注意Arrays.asLis() 返回的是List<t>,而不是ArrayList();</t></t></li>
+<li>只要修改了adapter中的集合的数据，就要马上调用notifyDataSetChanged方法，以保证列表同步更新，否则崩溃。</li>
+<li>ListView滚动式点击刷新按钮后会崩溃，因为之前getCount还有数据，滚动时刷新数据集合就清掉了，getView 中数据为空，报数据越界等异常，一般解决方案是，滚动时，禁止刷新。</li>
+<li>PopupWindow创建后才能再调用setFocusable() 方法。</li>
+<li>PopupWindow.showLocation(view parent,int gravity,in x,int y),当参数parent 为空时，报Unable to add Windowtoken,因为popupWindow要依附activity，activity还没有onCreate()执行完，就会报此错误。</li>
+<li>armeabi 和armeabi-v7a中so包数量不一致，会导致UnsatisfiedLinkError。  </li>
+<li>SQLite 支持单线程、多线程、串行三种模式。但是多线程中使用单个数据库连接不是安全的，当一个线程写数据，一个在删数据会抛I/O 异常，当一个操作完关闭数据库，另外一个还在操作也会导致Crash。</li>
+<li><code>&lt;application android:largeHeap=&quot;true&quot;</code>可以增加系统为当前app 分配内存，甚至能到达100M以上，但是每次GC 时间会延长，性能会下降。</li>
+<li>WebView中存在两种缓存：网页数据缓存，存储打开过的页面及资源；Html5缓存，及appCache。WebView自带的缓存机制，会将url保存在webviewCashe.db中，将url内容保存在webViewCashe文件夹下，网页数据图片、html、js等文件也会存储起来<br>##ProGuard<br>ProGuard一共包含以下4个功能：</li>
+</ol>
+<ul>
+<li>压缩（Shrink）:侦探并移除代码中无用的类、字段、方法和特性（Attribute）。</li>
+<li>优化(Optimize):对字节码进行优化，移除无用的指令</li>
+<li>混淆（Obfuscate）:使用a、b、c、d这样无意义名称，对类、字段和方法进行重命名</li>
+<li>预检（Preverify）:在Java平台上对处理后的代码进行预检。<br>##竞品分析<br>###1. 竞品app分析方向(针对技术）：</li>
+<li>为啥他们的App体积比我们小</li>
+<li>为啥他们App访问速度比我们快</li>
+<li>为啥他们App基本上不咋崩溃</li>
+<li>等等···<br>###2. 优化措施<ul>
+<li>Splash 广告提速：首次加载App包中图片，同事调用API获取下一次打开图片的Url,并存储本地，下次Splash就加载下载下来的新图片,并调用API查看是否有新　的Splash图片要下载。</li>
+<li>HTML5页面提速：将常用的HTMl5打成Zip包，每次启动时，启动异步线程，将zip包解压到本地，每次从本地读取Html5页面，就不用从服务器加载Html 页面。为保证Html5为最新的，每次加载html5页面之前，可以询问服务器html的版本号，如果过期重新下载最新zip包。</li>
+<li>zip包采用增量更新机制：每次发版前将最新的Zip包放在App安装包中。客户端下载Zip只需包括新增的和修改的就行，另外控制增量包在100KB之内。</li>
+<li>png/jpg使用：手机会对png图片进行硬件加速，同样图片png体积比jpg大，但是加载速度要快些。app图片优先使用png格式。但是大尺寸图片，为减少apk 包体积可使用jpg。考虑流量及下载速度需网络下载的图片使用jpg。</li>
+<li>使用webP，vetorDrawable、ttf 等</li>
+<li>自动选取最佳服务器策略：全国各地多台服务器，并分别接入电信、移动或者联通专线，让app尝试从哪个服务器连接速度快些</li>
+<li>TCP+ProtoBuf:已有公司抛弃短连接Http+json，开始走TCP+ProtoBuf路线。但是需要保证服务器的性能压力，考虑网络状况情况。</li>
+<li>Native 页面和Html 页面相互替换。当原生页面崩溃掉，使用html页面顶上。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/《APP-研发录》/" rel="tag">#《APP 研发录》</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/03/Android 6.0 权限/" rel="next" title="Android 6.0 权限">
+                <i class="fa fa-chevron-left"></i> Android 6.0 权限
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/03/数组类型不同解析问题探究/" rel="prev" title="数组类型不同解析问题探究">
+                数组类型不同解析问题探究 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/03/《App研发录》读书笔记——Android 知识点汇总/"
+           data-title="《Android》读书笔记" data-url="http://yoursite.com/2016/09/03/《App研发录》读书笔记——Android 知识点汇总/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/13974059.jpeg"
+               alt="jinwong001" />
+          <p class="site-author-name" itemprop="name">jinwong001</p>
+          <p class="site-description motion-element" itemprop="description">To be a better man</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jinwong001" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/users/a4de2d8dfacd/latest_articles" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/sunshine2050_csdn" title="CSDN" target="_blank">CSDN</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jinwong001</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jinwong001"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

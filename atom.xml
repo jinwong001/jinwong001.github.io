@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-09-03T07:13:57.000Z</updated>
+  <updated>2016-09-03T13:15:45.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,11 +16,878 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>数组类型不同解析问题探究</title>
+    <link href="http://yoursite.com/2016/09/03/%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B%E4%B8%8D%E5%90%8C%E8%A7%A3%E6%9E%90%E9%97%AE%E9%A2%98%E6%8E%A2%E7%A9%B6/"/>
+    <id>http://yoursite.com/2016/09/03/数组类型不同解析问题探究/</id>
+    <published>2016-09-03T13:14:42.000Z</published>
+    <updated>2016-09-03T13:15:45.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们在开发过程中可以遇到json 数组中的具体的javaBean 不一致现象。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;&quot;list&quot;:[&#123;</div><div class="line">    &quot;type&quot;:a,</div><div class="line">    &quot;data&quot;:A,</div><div class="line">&#125;,&#123;</div><div class="line">    &quot;type&quot;:a,</div><div class="line">    &quot;data&quot;:B</div><div class="line">&#125;]&#125;</div></pre></td></tr></table></figure>
+<p>如上图所示，list中data的类型根据type的值而变化。像这种bean类型不一致问题,一直烦恼着开发者，现在简单介绍下，几种 可行的解决思路。</p>
+<h2 id="方法一：合并Bean"><a href="#方法一：合并Bean" class="headerlink" title="方法一：合并Bean"></a>方法一：合并Bean</h2><p>如果A与B中的字段不复杂，可以将A，B合并组合成一个比较大的Bean实例，他包括A和B中所有的字段。<br>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&#123;&quot;list&quot;:[&#123;</div><div class="line">    &quot;type&quot;:&quot;person&quot;,</div><div class="line">    &quot;data&quot;:&#123;</div><div class="line">          name:&quot;小王&quot;,</div><div class="line">          age:15,</div><div class="line">          gender:&quot;male&quot;</div><div class="line">    &#125;,</div><div class="line">&#125;,&#123;</div><div class="line">    &quot;type&quot;:&quot;dog&quot;,</div><div class="line">    &quot;data&quot;:&#123;</div><div class="line">          name:&quot;旺财&quot;,</div><div class="line">          age:2,</div><div class="line">          species:&quot;家狗&quot;</div><div class="line">    &#125;,</div><div class="line">&#125;]&#125;</div></pre></td></tr></table></figure></p>
+<p>合并之后的bean 为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public class combineBean &#123;</div><div class="line">    public String name;</div><div class="line">    public int age;</div><div class="line">    public String gender;</div><div class="line">    public String species;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="方法二：data字段根据type而更改"><a href="#方法二：data字段根据type而更改" class="headerlink" title="方法二：data字段根据type而更改"></a>方法二：data字段根据type而更改</h2><p>对于数组中data数据结构不同，那么字段就不统一命名成data，而是根据type的不同类型，服务器返回不同的字段，如：person，dog。那么对应的实体类应该是这样的形式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class ListBean&#123;</div><div class="line">    public String type;</div><div class="line">    public PersonBean person;</div><div class="line">    public DogBean dog;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>此方法前提条件就是需要服务器配合，要是你用现成的服务器那么这种方法完全就不用考虑了。<br>另外这种方法data中类型种类比较多，还会导致ListBean类比较大。而且json中字段不统一。</p>
+<h2 id="方法三：Json解析"><a href="#方法三：Json解析" class="headerlink" title="方法三：Json解析"></a>方法三：Json解析</h2><p>既然我们的data中的实体类，根据type类型进行改变，我们可以首先解析出来type字段对应的值，然后根据type值得类型，设置data不同的类型的实体类，然后再解析data中数据。<br>当然关于ListBean中类型统一，可以设置data类型的接口，或者父类，然后子类实现它：<br>list中data字段对应的基类，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public class DataBean&#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>当然你可以将data中子类中相同的字段提取出来，放在DataBean中。<br>有了DataBean这个虚拟的基类后，我们就可以统一ListBean的类型。<br>ListBean<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public class ListBean&#123;</div><div class="line">    public String type;</div><div class="line">    public DataBean data;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后让data中具体的不同子类去继承父类DataBean，实现我们需要的子类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class PersonBean extend DataBean&#123;</div><div class="line">    public String name;</div><div class="line">    public int age;</div><div class="line">    public String gender;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class DogBean extend DataBean&#123;</div><div class="line">    public String name;</div><div class="line">    public int age;</div><div class="line">    public String species ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们可以安装Json的解析的方法，首先将返回的json字符串慢慢解析成实体类，首先解析list，然后里面的type 我们根据type的类型然后解析data中不同类型的数据。<br>这个json解析唯一的难点就是必须首先要解析出type的数据，然后根据type才能确定data的不同的实体类型。</p>
+<p>其实Gson中可以自定义解析器；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">public class ListBeanDeserializer implements JsonDeserializer&lt;TypeResult&gt; &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public ListBean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException &#123;</div><div class="line">         if (!json.isJsonObject()) &#123;</div><div class="line">            return null;</div><div class="line">        &#125;</div><div class="line">        JsonObject obj = json.getAsJsonObject();</div><div class="line">        JsonArray asJsonArray = obj.get(&quot;list&quot;).getAsJsonArray();</div><div class="line">        ListBean list = new ListBean();</div><div class="line">        for (JsonElement jsonElement : asJsonArray) &#123;</div><div class="line">            JsonObject jsonOb = jsonElement.getAsJsonObject();</div><div class="line">            String type = jsonOb.get(&quot;type&quot;).getAsString();</div><div class="line">            if (TextUtils.equal(type,&quot;person&quot;)) &#123;</div><div class="line">                JsonObject child = jsonOb.get(&quot;data&quot;).getAsJsonObject();</div><div class="line">                String name = child.get(&quot;name&quot;).getAsString();</div><div class="line">                int age = child.get(&quot;age&quot;).getAsInt();</div><div class="line">                String gender = child.get(&quot;gender&quot;).getAsString();</div><div class="line">                list.data=new Person(name, age,gender);</div><div class="line">            &#125; else if(TextUtils.equal(type,&quot;dog&quot;)) &#123;</div><div class="line">                JsonObject child = jsonOb.get(&quot;data&quot;).getAsJsonObject();</div><div class="line">                String name = child.get(&quot;name&quot;).getAsString();</div><div class="line">                int age = child.get(&quot;age&quot;).getAsInt();</div><div class="line">                String species = child.get(&quot;species&quot;).getAsString();</div><div class="line">                list.data=new Person(name, age,species);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return list;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用解析器解析：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">protected ArrayList&lt;ListBean&gt; deserializerResponse(@NonNull Response response) throws IOException &#123;</div><div class="line">                      String json = null;</div><div class="line">                      if (response != null &amp;&amp; response.body() != null) &#123;</div><div class="line">                          json = response.body().string();</div><div class="line">                      &#125;</div><div class="line">                      GsonBuilder gsonBuilder = new GsonBuilder();</div><div class="line">                      gsonBuilder.registerTypeAdapter(ListBean.class, new ListBeanDeserializer());</div><div class="line">                      Gson gson = gsonBuilder.create();</div><div class="line">                      return gson.fromJson(TextUtils.isEmpty(json) ? json : json.trim(), new TypeToken&lt;ArrayList&lt;ListBean&gt;&gt;() &#123;</div><div class="line">                      &#125;.getType());</div><div class="line">                  &#125;</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我们在开发过程中可以遇到json 数组中的具体的javaBean 不一致现象。例如：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/di
+    
+    </summary>
+    
+      <category term="Java" scheme="http://yoursite.com/categories/Java/"/>
+    
+    
+      <category term="Gson" scheme="http://yoursite.com/tags/Gson/"/>
+    
+      <category term="数据解析" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E8%A7%A3%E6%9E%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《Android》读书笔记</title>
+    <link href="http://yoursite.com/2016/09/03/%E3%80%8AApp%E7%A0%94%E5%8F%91%E5%BD%95%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94Android%20%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"/>
+    <id>http://yoursite.com/2016/09/03/《App研发录》读书笔记——Android 知识点汇总/</id>
+    <published>2016-09-03T12:56:41.000Z</published>
+    <updated>2016-09-03T13:06:49.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>&ensp;&ensp; 我自认为是一个很懒的人，虽然最近一直在读些书，可是读完就完了，没有留下什么。之前一直计划每读一本书，做些读书笔记，但不了了之。现在想从现在开始养成良好的读书写笔记的习惯，为了以下三个目标而努力：</p>
+<ul>
+<li>加深印象。虽然我知道就算自己认真读完，并且做好标注，记好笔记，该忘记的还是得忘记，而且能记得1%的内容就算天赋异人了，可还是希望能自己做些努力，认真记些书中的精华。</li>
+<li>加强对书籍的整体架构的理解。我在读书的过程中有一个习惯，遇到自己觉得比较好的地方就画些线，做些笔记，但是他们都是散落在书中各个不同的角落，希望通过写读书笔记将他们与书的章落结构串起来，从整体把握他们。</li>
+<li>培养自己的书写能力。自从我们进入社会以后，好像从来都没有认真的写过一些东西，每年的做的最认真也是年终总结，可是也是从照抄网上的模板，自己的书写能力一直在退步。希望以后借写读书笔记的这个机会，多多写些东西，慢慢培养自己的能力。</li>
+<li>培养良好的读书习惯，其实这是我最大的目标，我这人，人懒，坏毛笔多，希望从现在开始培养一些能说出口的好习惯。</li>
+</ul>
+<p>《App研发录》这部书是包建强写的，说来也巧，在读这边书之前在看池建强的《Mac 人生元编程》 ，所以读这本书的时候，将这两个建强搞混。这本书花了我一周多一点的时间看完。昨天晚看完久久不能寐，一是惊叹这本书的干货太多，这本书不同于市面上其他的Android 教程，给你讲一堆API方法，Android 基础，作者从一个APP团队的负责人的角度高屋建瓴的讲解App框架设计，Bug收集汇总分析，团队建设，项目管理等等方面，而且都是非常适合APP的项目管理者的实在的经验。二是敬佩作者进入Android 领域也不是很久，但是见解非凡，经验老道，感到自己做Android 也快两年了，为啥还达到没有作者的一半高度。唉，看来自己之前的两年过得太轻松了，每天混混日子，自以为懂些Android 技术，能实现产品交代的功能，就得过且过，没有好好的利用好时间，认真学习，加速成长。</p>
+<p>题外话太多了，自己觉得有些东西是多余的，是自己的无病呻吟，各位看官，可以忽略不看，直接看下面的干货。</p>
+<hr>
+<p>##APP 框架</p>
+<p>###1. 项目结构<br>非常赞同作者的观点，我们App必须具有良好的包结构，按照一定规则将不同的类放到不同的地方，目前市面上有两者结构，一种是按照类的类型进行归纳放置，例如Activity 类放一起，adapter 放一起，以此类推；另外一种是按照业务逻辑，例如主页页面逻辑放在一个小包中，用户信息逻辑放在一个小包中，当然小包中可以再分包。<br>两种都可以，但必须具有一致项目结构，不要弄得不三不四，类到处放，没有一定规则</p>
+<p>###2. baseActivity、BaseAdapter基类管理</p>
+<p>###3. 网络框架，封装好网络层。<br>不要使用AsyTask，因为他在4.x 版本中是串行，效率不高，而且当请求线程数达到AsyTask上线时会有问题。建议用TheadPoolExecutor+Runnable+Handler 的方式进行封装。<br>统一预处理成功及失败回掉，</p>
+<p>###4. 数据缓存策略：<br>为减少请求网络数据次数，有必要进行数据缓存，将请求网络的数据，缓存在手机上，为保证数据即时性，设置缓存时间，而且可以根据业务需求对不同数据设置不同的缓存时间，有的数据不咋改变可以设置长些时间，有些数据经常变动，对即时性要求比较高，缓存时间设置短些，设置可以不设置缓存。<br>另外必须有接口能够让用户强制更新数据，例如用户下来刷新，就不要使用缓存中数据，而是直接请求最新的网络数据</p>
+<p>###5. 用户登录</p>
+<ul>
+<li>考虑用户登录各种场景<br>一种用户开始登录然后进入主页面，二种用户没有登录数据不能进入下一界面，需要跳转登录页，再跳回来，三种用户请求网路但是用户身份验证失败需要跳到登录注册页。前面一种好说，后面两种可以设置回调进行处理，有种情况可能比较麻烦，例如用户进入某一页面没有用户信息，需要跳回登录注册页，可是登录注册完成后又得填资料补全身份信息等最后，经过一系列流程后才跳回原始的页面。<br>```<br> //起始页面，可能需要跳转登录注册页<br> if(User.isLogin()){<pre><code> //do something
+}else{
+</code></pre> Intent intent=new Intent(this,LoginActivity.class){<br> intent.putExtra(AppConstant.NeedCallback,true);<br> startActivityForResult(intent,LOGIN_REDIEECT_INSIDE);<pre><code>}
+</code></pre> }</li>
+</ul>
+<p>@Override<br>public void onActivityResult(int requestCode, int resultCode,Intent data){<br>    if(resultCode!=Activity.RESULT_OK){<br>        return;<br>      }<br>    swith(requestCode){<br>       case LOGIN_REDIEECT_INSIDE:<br>           //  do something<br>            break;<br>       default:<br>       break;<br>    }<br>}</p>
+<p>//登录页面 LoginActivity<br>if(getIntent.getBooleanExtra(AppConstant.NeedCallback){<br>    setResult(Activity.RESULT_OK);<br>    finish();<br>}ese{<br>   //do otherthing<br>}<br>```    </p>
+<ul>
+<li>用户信息存储风险<br>用户的信息我们在app中多处用到，我们建议将他持久化处理，并且将其文件存储起来。要考虑我们用户信息失效问题。<br>另外用户的密码必须经过加密处理，我建议客户端将用户输入的密码加密处理后才传给服务端，服务端对传过来的密码也进行一层加密，以保证用户安全。另外我不建议存储用户的密码，即时是加密后的密码，可以使用Token机制（有的也叫Cookie机制），储存Token，这个Token可以当成用户身份的唯一性标识。用户客户端登陆后，服务器生成Token，当用户调用与用户信息相关的接口时，将用户ID 与Token 传给服务器，服务器首先根据Token与ID验证用户正确性，然后才将数据传给用户</li>
+<li>自动登陆功能<br>自动登陆功能需要储存用户的密码，需要注意密码的安全性问题。而且自动登陆与输验证码相斥问题。</li>
+<li>使用Cookie方法保证用户信息安全<br>当用户登录成功后，从后台获取到Cookie,Cookie在Http-Respose的头文件中，我们将他取出来，下次联网请求数据时将Cookie放入Http-Request的头文件中，如果请求数据与用户信息相关，服务器验证身份成功才返回数据。每次请求后客户端必须更新Cookie。另外注意Cookie过期问题，及用户注销后，需要将用户信息清空。</li>
+</ul>
+<p>###6. 防止黑客刷库</p>
+<ul>
+<li>第一种方法，登录时添加验证码</li>
+<li>第二种方法，登录三次失败后才需要用户输入验证码</li>
+<li>第三种方法，后台检测某一IP在短时间内频繁访问登录接口，然后用户输入验证码。<br>###7. 时间校准问题<br>如果后台或者用户端对时间准确性要求比较高的话，需要考虑这个问题。因为我们用户手机上的时间不是非常准确，一般都有一定的偏差。作者建议后台采用UTC时间，包括入参和返回值，返回值为long类型。客户端根据得到的UTC时间换算成本地时间。如果需要用户传给后台准确的时间，这是个大问题。用户那边其实很难得到比较准确的时间，除了用户时区问题，另外还有与准确时间偏差问题。可以用户的时间传给后台，后台比对差值，然后每次不停的比对减少误差，最后找到一个准确值。<br>###8. gzip 压缩<br>一般http采用gzip压缩，减少传输量，缩短传输时间。但是在HttpRespose 需要判断content-encoding字段中是否有gzip,判断后台是否经过gzip压缩。<br>###9. Freso的三级缓存<br>第一层：Bitmap 缓存<br>在Android 5.0中，考虑内存管理有了很大的进步，所以讲Bitmap 缓存在Java堆中，在之前版本中Bitmap缓存在ashmen中，当app切换到后台时，Bitmap缓存将会被清空<br>第二层：内存缓存<br>内层缓存中存储了图片原始压缩的格式，从内层缓存中取出图片，在显示之前必须进行解码。当app切换到后台，内存缓存也被清空<br>第三层：磁盘缓存，也叫本地缓存<br>本地存储图片原始压缩格式，显示之前也需先解码，当app切换后台，磁盘缓存不会丢失。<br>###10. 流量优化</li>
+<li>数据压缩（常见gzip）</li>
+<li>使用更好的数据传递协议。例如比JSON更好的ProtoBuffer</li>
+<li>合并api,防止客户端频繁调用api请求</li>
+<li>http无状态短连接改成TCP长连接。但是需要对服务器及后台有要求</li>
+<li>页面销毁需要取消之前的网络请求</li>
+<li>增加重试机制，例如get请求失败重试三次，但是需要防止用户重复下单，重复发布评论，重复付款等，</li>
+<li>图片请求附带尺寸参数，服务端更加尺寸传输最近尺寸的图片。</li>
+<li>低流量模式，降低图片质量或尺寸，甚至可以不返回图片的极速模式<br>###11.增量更新<br>app中的资料包，城市列表等素材可以使用增量更新。每次发版素材保证是最新的版本，当有更新时，首先对比本地素材版本号与线上素材版本号，后台根据他们版本号返回对应的更新内容。客户端收到后解压。增量更新的内容有三部分：需要删除的数据、不变的数据但是需要修改、新增的数据，用户根据情况各自处理<br>###12. Html 互换技术<br>当我们的app原生页面遇到bug,可以马上切换到Html页面替换。</li>
+</ul>
+<p>##Crash及持续集成</p>
+<p>###1. Crash 的收集<br>收集的渠道</p>
+<ul>
+<li>集成第三方统计工具。友盟、leadCould</li>
+<li>集成Bug管理工具，例如Bugly,BugTag等</li>
+<li>app本地收集，将错误日志记录在本地，然后发送到后台服务器，另外需要标注Crash时间，Crash名称，详细信息，手机版本，设备号，渠道号，当前网络类型，内存使用情况等等。<br>本地bug收集需要用到<code>UncaughtExceptionHandler</code>这个类<br>###2.Crash经验</li>
+</ul>
+<ol>
+<li>窗体泄露问题，主要是想关闭弹出框时，他所承载的activity 不在了，而activity关闭了，没有及时dismiss会导致泄露窗口句柄，不要在子线程操作对话框，另外让对话框是Activity成员变量，活跃在onCreate()和onDestroy()两个方法之间，或者建议使用DialogFragment。</li>
+<li>只有activity 才能添加窗体，传给Dialog的Context 要为activity。</li>
+<li>不要相信api 返回数据，必须做非空判断，类型异常等容错处理</li>
+<li>遍历集合时不能删除集合中数据，否则发生崩溃。另外多个线程同时操作同一集合数据也可能会发生崩溃</li>
+<li>当Service或者BroadcastReceiver等中当context 为非activity 跳转activity需要加<code>Intent.FLAG_ACITIVITY_NEW_TASK</code>。</li>
+<li>当fragment还没有attach 到activity中调用<code>getResource().getString()</code>会报错，建议在调用之前加上<code>isAdd()</code>判断</li>
+<li>Parcelable 反序列化时，例如<code>a=in.readParcelable(null)</code>会可能抛出<code>BadParcelabeException:ClassNotFoundException when unmarshalling...</code>改成这样就行<code>a=in.readParcelable(A.class.getClassLoader)</code>。</li>
+<li>List<t> 没有实现add()、remove(）方法， 使用这两个方法会抛异常，特别注意Arrays.asLis() 返回的是List<t>,而不是ArrayList();</t></t></li>
+<li>只要修改了adapter中的集合的数据，就要马上调用notifyDataSetChanged方法，以保证列表同步更新，否则崩溃。</li>
+<li>ListView滚动式点击刷新按钮后会崩溃，因为之前getCount还有数据，滚动时刷新数据集合就清掉了，getView 中数据为空，报数据越界等异常，一般解决方案是，滚动时，禁止刷新。</li>
+<li>PopupWindow创建后才能再调用setFocusable() 方法。</li>
+<li>PopupWindow.showLocation(view parent,int gravity,in x,int y),当参数parent 为空时，报Unable to add Windowtoken,因为popupWindow要依附activity，activity还没有onCreate()执行完，就会报此错误。</li>
+<li>armeabi 和armeabi-v7a中so包数量不一致，会导致UnsatisfiedLinkError。  </li>
+<li>SQLite 支持单线程、多线程、串行三种模式。但是多线程中使用单个数据库连接不是安全的，当一个线程写数据，一个在删数据会抛I/O 异常，当一个操作完关闭数据库，另外一个还在操作也会导致Crash。</li>
+<li><code>&lt;application android:largeHeap=&quot;true&quot;</code>可以增加系统为当前app 分配内存，甚至能到达100M以上，但是每次GC 时间会延长，性能会下降。</li>
+<li>WebView中存在两种缓存：网页数据缓存，存储打开过的页面及资源；Html5缓存，及appCache。WebView自带的缓存机制，会将url保存在webviewCashe.db中，将url内容保存在webViewCashe文件夹下，网页数据图片、html、js等文件也会存储起来<br>##ProGuard<br>ProGuard一共包含以下4个功能：</li>
+</ol>
+<ul>
+<li>压缩（Shrink）:侦探并移除代码中无用的类、字段、方法和特性（Attribute）。</li>
+<li>优化(Optimize):对字节码进行优化，移除无用的指令</li>
+<li>混淆（Obfuscate）:使用a、b、c、d这样无意义名称，对类、字段和方法进行重命名</li>
+<li>预检（Preverify）:在Java平台上对处理后的代码进行预检。<br>##竞品分析<br>###1. 竞品app分析方向(针对技术）：</li>
+<li>为啥他们的App体积比我们小</li>
+<li>为啥他们App访问速度比我们快</li>
+<li>为啥他们App基本上不咋崩溃</li>
+<li>等等···<br>###2. 优化措施<ul>
+<li>Splash 广告提速：首次加载App包中图片，同事调用API获取下一次打开图片的Url,并存储本地，下次Splash就加载下载下来的新图片,并调用API查看是否有新　的Splash图片要下载。</li>
+<li>HTML5页面提速：将常用的HTMl5打成Zip包，每次启动时，启动异步线程，将zip包解压到本地，每次从本地读取Html5页面，就不用从服务器加载Html 页面。为保证Html5为最新的，每次加载html5页面之前，可以询问服务器html的版本号，如果过期重新下载最新zip包。</li>
+<li>zip包采用增量更新机制：每次发版前将最新的Zip包放在App安装包中。客户端下载Zip只需包括新增的和修改的就行，另外控制增量包在100KB之内。</li>
+<li>png/jpg使用：手机会对png图片进行硬件加速，同样图片png体积比jpg大，但是加载速度要快些。app图片优先使用png格式。但是大尺寸图片，为减少apk 包体积可使用jpg。考虑流量及下载速度需网络下载的图片使用jpg。</li>
+<li>使用webP，vetorDrawable、ttf 等</li>
+<li>自动选取最佳服务器策略：全国各地多台服务器，并分别接入电信、移动或者联通专线，让app尝试从哪个服务器连接速度快些</li>
+<li>TCP+ProtoBuf:已有公司抛弃短连接Http+json，开始走TCP+ProtoBuf路线。但是需要保证服务器的性能压力，考虑网络状况情况。</li>
+<li>Native 页面和Html 页面相互替换。当原生页面崩溃掉，使用html页面顶上。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&amp;ensp;&amp;ensp; 我自认为是一个很懒的人，虽然最近一直在读些书，可是读完就完了，没有留下什么。之前一直计划每读一本书，做些读书笔记，但不了了之。现在想从现在开始养成良好的读书写笔记的习惯，为了以下三个目标而努力：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;加深印象。虽然我知道就算自
+    
+    </summary>
+    
+      <category term="读书笔记" scheme="http://yoursite.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="《APP 研发录》" scheme="http://yoursite.com/tags/%E3%80%8AAPP-%E7%A0%94%E5%8F%91%E5%BD%95%E3%80%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android 6.0 权限</title>
+    <link href="http://yoursite.com/2016/09/03/Android%206.0%20%E6%9D%83%E9%99%90/"/>
+    <id>http://yoursite.com/2016/09/03/Android 6.0 权限/</id>
+    <published>2016-09-03T12:56:19.000Z</published>
+    <updated>2016-09-03T13:06:23.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Android 6.0 后Google 为了保障用户安全，提高系统的安全性，推出了新的权限机制，不像过去直接在Manifest 申明权限，当用户安装时，提示需要的权限，用户确认安装，许可全部权限。</p>
+<p>新的权限机制发生条件：</p>
+<ul>
+<li><p>用户的手机是Android 6.0 以上的系统</p>
+</li>
+<li><p>Apk 的编译版本在23以上（targetSdkVersion)</p>
+</li>
+</ul>
+<p>Android 6.0 将权限分为：</p>
+<ul>
+<li><p>一般权限：安装时自动授权，用户也不能取消其权限</p>
+</li>
+<li><p>危险权限:  需要用户需要授权</p>
+</li>
+</ul>
+<p>###操作</p>
+<ul>
+<li><ol>
+<li>Manifest添加权限</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&lt;!-- Android6.0 蓝牙扫描才需要--&gt;</div><div class="line">   &lt;uses-permission-sdk-23 android:name=&quot;android.permission.ACCESS_COARSE_LOCATION&quot;/&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li><ol>
+<li>请求权限</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">//判断是否有权限</div><div class="line">// Here, thisActivity is the current activity</div><div class="line">if (ContextCompat.checkSelfPermission(thisActivity,</div><div class="line">                Manifest.permission.ACCESS_COARSE_LOCATION)</div><div class="line">        != PackageManager.PERMISSION_GRANTED)</div><div class="line"></div><div class="line">//请求权限</div><div class="line">ActivityCompat.requestPermissions(thisActivity,</div><div class="line">                new String[]&#123;Manifest.permission.ACCESS_COARSE_LOCATION&#125;,</div><div class="line">                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);</div><div class="line">//判断是否需要 向用户解释，为什么要申请该权限</div><div class="line">ActivityCompat.shouldShowRequestPermissionRationale(thisActivity,</div><div class="line">                Manifest.permission.READ_CONTACTS)</div><div class="line">//权限申请结果</div><div class="line">onRequestPermissionsResult(int requestCode,</div><div class="line">        String permissions[], int[] grantResults)</div></pre></td></tr></table></figure>
+<p>###权限WRITE_SETTINGS处理</p>
+<p>android.permission.WRITE_SETTINGS不能自动授权，也不能运行时请求授权，咋整啊？通过打开Intent来让用户设置。貌似SETTINGS的权限只能这么处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">/**</div><div class="line"> * An app can use this method to check if it is currently allowed to write or modify system</div><div class="line"> * settings. In order to gain write access to the system settings, an app must declare the</div><div class="line"> * &#123;@link android.Manifest.permission#WRITE_SETTINGS&#125; permission in its manifest. If it is</div><div class="line"> * currently disallowed, it can prompt the user to grant it this capability through a</div><div class="line"> * management UI by sending an Intent with action</div><div class="line"> * &#123;@link android.provider.Settings#ACTION_MANAGE_WRITE_SETTINGS&#125;.</div><div class="line"> *</div><div class="line"> * @param context A context</div><div class="line"> * @return true if the calling app can write to system settings, false otherwise</div><div class="line"> */</div><div class="line"> if(!Settings.System.canWrite(this))&#123;</div><div class="line">      Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,</div><div class="line">                Uri.parse(&quot;package:&quot; + getPackageName()));</div><div class="line">      startActivityForResult(intent, REQUEST_CODE);</div><div class="line"> &#125; </div><div class="line"></div><div class="line"></div><div class="line">@Override</div><div class="line">protected void onActivityResult(int requestCode, int resultCode, Intent data) &#123;</div><div class="line">    if (requestCode == REQUEST_CODE) &#123;</div><div class="line">        if (Settings.System.canWrite(this)) &#123;</div><div class="line">            //检查返回结果</div><div class="line">            Toast.makeText(MainActivity.this, &quot;WRITE_SETTINGS permission granted&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">        &#125; else &#123;</div><div class="line">            Toast.makeText(MainActivity.this, &quot;WRITE_SETTINGS permission not granted&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Android 6.0 后Google 为了保障用户安全，提高系统的安全性，推出了新的权限机制，不像过去直接在Manifest 申明权限，当用户安装时，提示需要的权限，用户确认安装，许可全部权限。&lt;/p&gt;
+&lt;p&gt;新的权限机制发生条件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;用户的
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="权限" scheme="http://yoursite.com/tags/%E6%9D%83%E9%99%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>aar 探究</title>
+    <link href="http://yoursite.com/2016/09/03/aar/"/>
+    <id>http://yoursite.com/2016/09/03/aar/</id>
+    <published>2016-09-03T12:56:00.000Z</published>
+    <updated>2016-09-03T13:07:59.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>何为aar？大家都知道jar，区别就是一个jar文件不能包含资源文件，比如一些drawable文件、xml资源文件之类的，<br>而aar包含这些文件, 通过gradle 我们可以将Android Libaray 项目直接打包成arr,然后向引用jar 文件一样方便使用。</p>
+<p>##生产aar</p>
+<p>首先Android Library项目的 首先Android Library项目的gradle脚本只需要在开头声明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apply plugin:&apos;com.android.library&apos;</div></pre></td></tr></table></figure></p>
+<p>之后就和导出apk文件一样的方法，执行 ./gradlew assembleRelease，然后就可以在 build/outputs/aar 文件夹里生成aar文件</p>
+<p>##aar 导入方式</p>
+<p>###导入方式一：<br>1、 打开 Project Structure，添加一个新 Module，然后选择 Import <em>.JAR or </em>.AAR Package 的方式导入：</p>
+<p>2、 导入后，在你的工程下面，会生成一个文件夹，里面是 aar 文件以及 Android Studio 的配置文件。</p>
+<p>接着可以在 gradle 中配置依赖了，其他 Module 可以引用这个 Module 了，依赖方式使用 compile project 的方式即可。</p>
+<p>缺点： 被依赖的 aar 无法 F3 跟进去，无法看到资源文件内容以及目录层级等等缺陷。</p>
+<p>###导入方式二：配置依赖</p>
+<ul>
+<li>首先需要将 aar 文件放入引用 Module 的 libs 目录下，和一般的 jar 文件类似。</li>
+<li><p>在app的build.gradle文件添加如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">repositories &#123;</div><div class="line">    flatDir &#123;</div><div class="line">        dirs &apos;libs&apos; //this way we can find the .aar file in libs folder</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>项目中添加一句gradle依赖便方便的引用了该library</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">compile(name: &apos;xxx&apos;, ext: &apos;aar&apos;)。</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>##arar上传</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;何为aar？大家都知道jar，区别就是一个jar文件不能包含资源文件，比如一些drawable文件、xml资源文件之类的，&lt;br&gt;而aar包含这些文件, 通过gradle 我们可以将Android Libaray 项目直接打包成arr,然后向引用jar 文件一样方便使用。&lt;
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="aar" scheme="http://yoursite.com/tags/aar/"/>
+    
+      <category term="Android Studio" scheme="http://yoursite.com/tags/Android-Studio/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>断点调试</title>
+    <link href="http://yoursite.com/2016/09/03/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/"/>
+    <id>http://yoursite.com/2016/09/03/断点调试/</id>
+    <published>2016-09-03T12:55:51.000Z</published>
+    <updated>2016-09-03T13:08:29.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Android Studio的断点调试非常方便，有不同的断点类型，可供使用例如：</p>
+<ul>
+<li>一般断点</li>
+<li>条件断点</li>
+<li>方法断点</li>
+<li>属性断点</li>
+<li>一次性断点</li>
+<li>日志断点<br>如下图：<br><img src="file:///var/folders/_y/kzm_cwh1713gbtc9tz60c40w0000gn/T/cn.wiz.wiznoteformac/WizNote/0e8e825a-2237-4ad3-9048-9116fa3354af/index_files/91a4a7a4-599e-40db-9ba6-984598101e78.png" alt=""></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Android Studio的断点调试非常方便，有不同的断点类型，可供使用例如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一般断点&lt;/li&gt;
+&lt;li&gt;条件断点&lt;/li&gt;
+&lt;li&gt;方法断点&lt;/li&gt;
+&lt;li&gt;属性断点&lt;/li&gt;
+&lt;li&gt;一次性断点&lt;/li&gt;
+&lt;li&gt;日志断点&lt;br&gt;如下图：
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="调试" scheme="http://yoursite.com/tags/%E8%B0%83%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SoftInput(软键盘)</title>
+    <link href="http://yoursite.com/2016/09/03/SoftInput(%E8%BD%AF%E9%94%AE%E7%9B%98)/"/>
+    <id>http://yoursite.com/2016/09/03/SoftInput(软键盘)/</id>
+    <published>2016-09-03T12:55:44.000Z</published>
+    <updated>2016-09-03T13:08:54.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>软键盘在Android中是重要的输入设备，如果我们对其进行友好化优化的话，对提高用户体验有大大的帮助。</p>
+<h3 id="1-InputMethodManager"><a href="#1-InputMethodManager" class="headerlink" title="1. InputMethodManager"></a>1. InputMethodManager</h3><p>InputMethodManager是软键盘的管理类，我们可以用它来控制软键盘的展开、隐藏等操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);</div><div class="line"> //隐藏软键盘</div><div class="line"> imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);</div><div class="line"> //切换键盘</div><div class="line">  if(imm.isActive())&#123;                 imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,InputMethodManager.HIDE_NOT_ALWAYS);</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="2-windowSoftInputMode"><a href="#2-windowSoftInputMode" class="headerlink" title="2. windowSoftInputMode"></a>2. windowSoftInputMode</h3><p>WindowSoftInputMode是控制软键盘的启动模式，一般在theme 或者manifest中设置</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stateUnspecified</td>
+<td>软键盘的状态(是否它是隐藏或可见)没有被指定。系统将选择一个合适的状态或依赖于主题的设置。这个是为了软件盘行为默认的设置。</td>
+</tr>
+<tr>
+<td>stateUnchanged</td>
+<td>软键盘被保持无论它上次是什么状态，是否可见或隐藏，当主窗口出现在前面时。</td>
+</tr>
+<tr>
+<td>stateHidden</td>
+<td>当用户选择该Activity时，软键盘被隐藏——也就是，当用户确定导航到该Activity时，而不是返回到它由于离开另一个Activity。</td>
+</tr>
+<tr>
+<td>stateAlwaysHidden</td>
+<td>软键盘总是被隐藏的，当该Activity主窗口获取焦点时</td>
+</tr>
+<tr>
+<td>stateVisible</td>
+<td>软键盘是可见的，当那个是正常合适的时(当用户导航到”Activity主窗口时)</td>
+</tr>
+<tr>
+<td>stateAlwaysVisible</td>
+<td>当用户选择这个Activity时，软键盘是可见的——也就是，也就是，当用户确定导航到该Activity时，而不是返回到它由于离开另一个Activity。</td>
+</tr>
+<tr>
+<td>adjustUnspecified</td>
+<td>它不被指定是否该Activity主窗口调整大小以便留出软键盘的空间，或是否窗口上的内容得到屏幕上当前的焦点是可见的。系统将自动选择这些模式中一种主要依赖于是否窗口的内容有任何布局视图能够滚动他们的内容。如果有这样的一个视图，这个窗口将调整大小，这样的假设可以使滚动窗口的内容在一个较小的区域中可见的。这个是主窗口默认的行为设置。</td>
+</tr>
+<tr>
+<td>adjustResize</td>
+<td>该Activity主窗口总是被调整屏幕的大小以便留出软键盘的空间</td>
+</tr>
+<tr>
+<td>adjustPan</td>
+<td>该Activity主窗口并不调整屏幕的大小以便留出软键盘的空间。相反，当前窗口的内容将自动移动以便当前焦点从不被键盘覆盖和用户能总是看到输入内容的部分。这个通常是不期望比调整大小，因为用户可能关闭软键盘以便获得与被覆盖内容的交互操作。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>解决Andriod软键盘出现把原来的布局给顶上去的方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">//在mainfest.xml中，对那个Activity加：</div><div class="line">&lt;activity android:name=&quot;.activity.HomeActivity&quot;</div><div class="line">          android:windowSoftInputMode=&quot;adjustPan|stateHidden&quot;/&gt;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="3-WindowManager-LayoutParams-softInputMode"><a href="#3-WindowManager-LayoutParams-softInputMode" class="headerlink" title="3.WindowManager.LayoutParams.softInputMode"></a>3.WindowManager.LayoutParams.softInputMode</h3><p>WindowManager.LayoutParams.softInputMode 是Window上的属性，当设置其属性时，如果之前在主题上设置上windowSoftInputMode将会override。如果采用其他许多办法无法关闭显示软键盘，可以设置WindowManager.LayoutParams.softInputMode，将会起到想不到的好效果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);</div></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>softInputMode</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SOFT_INPUT_MASK_STATE</td>
+<td>软输入区域是否可见</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_UNSPECIFIED</td>
+<td>未指定状态</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_UNCHANGED</td>
+<td>不要修改软输入法区域的状态</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_HIDDEN</td>
+<td>隐藏输入法区域（当用户进入窗口时）</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_ALWAYS_HIDDEN</td>
+<td>当窗口获得焦点时，隐藏输入法区域。</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_VISIBLE</td>
+<td>显示输入法区域（当用户进入窗口时）</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_STATE_ALWAYS_VISIBLE</td>
+<td>当窗口获得焦点时，显示输入法区域</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_MASK_ADJUST</td>
+<td>窗口应当主动调整，以适应软输入窗口</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_ADJUST_UNSPECIFIED</td>
+<td>未指定状态，系统将根据窗口内容尝试选择一个输入法样式</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_ADJUST_RESIZE</td>
+<td>当输入法显示时，允许窗口重新计算尺寸，使内容不被输入法所覆盖。不可与SOFT_INPUT_ADJUSP_PAN混合使用；如果两个都没有设置，系统将根据窗口内容自动设置一个选项</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_ADJUST_PAN</td>
+<td>输入法显示时平移窗口。它不需要处理尺寸变化，框架能够移动窗口以确保输入焦点可见。不可与SOFT_INPUT_ADJUST_RESIZE混合使用；如果两个都没有设置，系统将根据窗口内容自动设置一个选项。</td>
+</tr>
+<tr>
+<td>SOFT_INPUT_IS_FORWARD_NAVIGATION</td>
+<td>当用户转至此窗口时，由系统自动设置，所以你不要设置它。当窗口显示之后该标志自动清除</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4-InputType"><a href="#4-InputType" class="headerlink" title="4.InputType"></a>4.InputType</h3><p>我们使用EditText有时为了提高用户体验，在弹出软键盘时需要设置键盘的面板状况，有时需要展示中文键盘，数字键盘，英文键盘等等。<br>可以设置InputType。EditText的InputType可以输入两种类型，一种EditorInfo，一种是InputType。EditorInfo是InputType实现类<br>Android并没有提供设置默认的输入状态的接口，但我们可以通过如下方法一样能够达到想要的效果：<br>InputType可以在Xml设置，或者直接在代码中设置。<br>默认数字键盘<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mEditText.setInputType(EditorInfo.TYPE_CLASS_NUMBER);</div></pre></td></tr></table></figure></p>
+<p>默认中文键盘<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mEditText.setInputType(EditorInfo.TYPE_CLASS_TEXT);</div></pre></td></tr></table></figure></p>
+<p>默认英文键盘<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mEditText.setInputType(EditorInfo.TYPE_TEXT_VARIATION_URI);</div></pre></td></tr></table></figure></p>
+<h3 id="5-ImeOption"><a href="#5-ImeOption" class="headerlink" title="5.ImeOption"></a>5.ImeOption</h3><p>改变输入法中回车按钮的显示内容，如果回车按钮是执行搜索功能，则回车按钮上显示”搜索”，如果是执行发送功能，则显示”发送”,如果是下一步，则显示”下一步”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">*</div><div class="line">* IME_ACTION_SEARCH 搜索</div><div class="line">* IME_ACTION_SEND 发送</div><div class="line">* IME_ACTION_NEXT 下一步</div><div class="line">* IME_ACTION_DONE 完成</div><div class="line">*/</div><div class="line">mInputEditTxt.setImeOptions(EditorInfo.IME_ACTION_SEARCH);</div></pre></td></tr></table></figure></p>
+<h3 id="6-关闭软键盘的N中方法"><a href="#6-关闭软键盘的N中方法" class="headerlink" title="6.关闭软键盘的N中方法"></a>6.关闭软键盘的N中方法</h3><ul>
+<li><p>方式一：InputMethodManager</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">EditText edit=(EditText)findViewById(R.id.edit)；</div><div class="line">        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)；</div><div class="line">          imm.hideSoftInputFromWindow(edit.getWindowToken(),0);</div></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：clearFocus 失去焦点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">EditText edit=(EditText)findViewById(R.id.edit);</div><div class="line">           edit.clearFocus();</div></pre></td></tr></table></figure>
+</li>
+<li><p>方式三：InputType 默认EditText始终不弹出软键盘</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">EditText edit=(EditText)findViewById(R.id.edit);</div><div class="line">       edit.setInputType(InputType.TYPE_NULL);</div></pre></td></tr></table></figure>
+</li>
+<li><p>方式四：setSoftInputMode为Hidden</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="7-KEYCODE"><a href="#7-KEYCODE" class="headerlink" title="7.KEYCODE"></a>7.KEYCODE</h3><p>在软键盘输入中我们需要监听我们按的键，我们可以用OnkeyListener监听按键。例如<br>KeyEvent.KEYCODE_Z、KeyEvent.KEYCODE_ENTER等按键。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">mInputEditTxt.setOnKeyListener(new OnKeyListener() &#123;</div><div class="line">    @Override</div><div class="line">    public boolean onKey(View v, int keyCode, KeyEvent event) &#123;</div><div class="line">        if (keyCode == KeyEvent.KEYCODE_ENTER &amp;&amp; event.getAction() == KeyEvent.ACTION_UP) &#123;</div><div class="line">            System.out.println(&quot;手指弹起时执行确认功能&quot;);</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;软键盘在Android中是重要的输入设备，如果我们对其进行友好化优化的话，对提高用户体验有大大的帮助。&lt;/p&gt;
+&lt;h3 id=&quot;1-InputMethodManager&quot;&gt;&lt;a href=&quot;#1-InputMethodManager&quot; class=&quot;headerlink&quot; 
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="软键盘" scheme="http://yoursite.com/tags/%E8%BD%AF%E9%94%AE%E7%9B%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>APK 瘦身探究</title>
+    <link href="http://yoursite.com/2016/09/03/APK%20%E7%98%A6%E8%BA%AB/"/>
+    <id>http://yoursite.com/2016/09/03/APK 瘦身/</id>
+    <published>2016-09-03T12:55:37.000Z</published>
+    <updated>2016-09-03T13:09:46.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="APK-大小分析"><a href="#APK-大小分析" class="headerlink" title="APK 大小分析"></a>APK 大小分析</h3><ul>
+<li>NimbleDroid </li>
+<li>分析方法数的</li>
+</ul>
+<h3 id="图片优化"><a href="#图片优化" class="headerlink" title="图片优化"></a>图片优化</h3><ul>
+<li>VectorDrawable</li>
+<li>tinyPng 有损压缩</li>
+<li>png→jpg</li>
+<li>jPG→Webp(反应在 小米2刷成4.xx的手机上，未能正确识别xml文件中描述的webp图片，导致界面起来后加载xml布局文件，文件加载webp失败，及 三星的部分机型上，部分有alpha背景部分的图会有一条很明显的黑线 ）</li>
+<li>大图缩小</li>
+<li>去掉库中未用的默认图</li>
+<li>有些图片改为从云端上获取</li>
+</ul>
+<h3 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h3><ul>
+<li>开启7zip</li>
+<li>微信资源压缩</li>
+</ul>
+<h3 id="资源清理"><a href="#资源清理" class="headerlink" title="资源清理"></a>资源清理</h3><ul>
+<li>去掉 删除armable-v7包的so</li>
+<li>去掉X86so 包（反应有 测试反应好像有些机器容易崩溃，未能经过严格测试，所以主版本又复原了，只在个别渠道执行这条措施。）</li>
+<li>去掉百度统计</li>
+<li>去掉leadCloud</li>
+<li>去除无用的库</li>
+<li>使用更小的库</li>
+<li>Lint 检测，去除无用的资源</li>
+</ul>
+<h3 id="Gradle-优化"><a href="#Gradle-优化" class="headerlink" title="Gradle 优化"></a>Gradle 优化</h3><ul>
+<li><p>去除无用语言自然</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">android &#123;</div><div class="line"></div><div class="line">     defaultConfig &#123;</div><div class="line"></div><div class="line">         resConfigs &quot;zh&quot;</div><div class="line"></div><div class="line">     &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>开启shrinkResources、minifyEnabled</p>
+</li>
+</ul>
+<ul>
+<li>proguard去符号表</li>
+<li>keepattributes SourceFile , LineNumberTable<br>可以注释掉</li>
+<li>proguard深度混淆代码</li>
+<li>将proguardFiles getDefaultProguardFile(‘proguard-android.txt’),’proguard-project.txt</li>
+</ul>
+<p>改为</p>
+<p>proguardFiles getDefaultProguardFile(‘proguard-android-optimize.txt’),’proguard-project.txt’</p>
+<h3 id="代码处理"><a href="#代码处理" class="headerlink" title="代码处理"></a>代码处理</h3><ul>
+<li>全版本兼容的着色方案，减少 selector文件，shape 文件</li>
+<li>Lint 清理</li>
+</ul>
+<h3 id="插件化"><a href="#插件化" class="headerlink" title="插件化"></a>插件化</h3><h3 id="使用更小的库"><a href="#使用更小的库" class="headerlink" title="使用更小的库"></a>使用更小的库</h3>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;APK-大小分析&quot;&gt;&lt;a href=&quot;#APK-大小分析&quot; class=&quot;headerlink&quot; title=&quot;APK 大小分析&quot;&gt;&lt;/a&gt;APK 大小分析&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;NimbleDroid &lt;/li&gt;
+&lt;li&gt;分析方法数的&lt;/li&gt;
+&lt;/ul&gt;
+
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="apk 瘦身" scheme="http://yoursite.com/tags/apk-%E7%98%A6%E8%BA%AB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>StrictMode 严格模式</title>
+    <link href="http://yoursite.com/2016/09/03/StrictMode%E4%B8%A5%E6%A0%BC%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2016/09/03/StrictMode严格模式/</id>
+    <published>2016-09-03T12:55:18.000Z</published>
+    <updated>2016-09-03T13:10:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Android 2.3提供一个称为严苛模式（StrictMode）的调试特性，Google称该特性已经使数百个Android上的Google应用程序受益。那它都做什么呢？它将报告与线程及虚拟机相关的策略违例。一旦检测到策略违例（policy violation），你将获得警告，其包含了一个栈trace显示你的应用在何处发生违例。你可以强制用警告代替崩溃（crash），也可以仅将警告计入日志，让你的应用继续执行。策略的细节尚难确定，可以期待随Android的成熟Google将增加更多策略。</p>
+<p>主要采用采用ThreadPolicy（线程策略）和VmPolicy（Vm策略）进行检测，各策略检测内容如下： </p>
+<h3 id="ThreadPolicy-线程策略检测的内容有"><a href="#ThreadPolicy-线程策略检测的内容有" class="headerlink" title="ThreadPolicy 线程策略检测的内容有"></a>ThreadPolicy 线程策略检测的内容有</h3><ul>
+<li>自定义的耗时调用 使用 detectCustomSlowCalls() 开启</li>
+<li>磁盘读取操作 使用 detectDiskReads() 开启</li>
+<li>磁盘写入操作 使用 detectDiskWrites() 开启</li>
+<li>网络操作 使用 detectNetwork() 开启 </li>
+<li>资源类型不匹配 使用detectResourceMismatches()  开启    android 23 开始增加</li>
+</ul>
+<h3 id="VmPolicy-虚拟机策略检测的内容有"><a href="#VmPolicy-虚拟机策略检测的内容有" class="headerlink" title="VmPolicy 虚拟机策略检测的内容有"></a>VmPolicy 虚拟机策略检测的内容有</h3><ul>
+<li>Activity泄露    使用 detectActivityLeaks() 开启</li>
+<li>未关闭的Closable对象泄露   使用 detectLeakedClosableObjects() 开启</li>
+<li>泄露的Sqlite对象   使用 detectLeakedSqlLiteObjects() 开启</li>
+<li>网络流量监控     使用   detectCleartextNetwork()   android 23增加</li>
+<li>广播或者服务等未注销导致泄漏  使用 detectLeakedRegistrationObjects()开启 android 23增加</li>
+<li>文件uri暴露  使用detectFileUriExposure()  android增加</li>
+</ul>
+<blockquote>
+<p>要注意anroid 23新增加的几个策略检测</p>
+<ul>
+<li>android 23 以后传递软件包网域外的 file://URI 可能给接收器留下无法访问的路径。 因此，尝试传递 file://URI 会触发 FileUriExposedException。 分享私有文件内容的推荐方法是使用 <a href="https://developer.android.com/reference/android/support/v4/content/FileProvider.html" target="_blank" rel="external">FileProvider</a>。<br>只有不开启detectFileUriExposure()</li>
+<li>建议在使用的直接调用detectAll(),而不是依次开启检测具体的策略</li>
+<li>而且严格模式StrictMode建议在调试模式中开启，防止影响正常运行</li>
+</ul>
+</blockquote>
+<p>##StrictMode具体使用：<br>StrictMode建议在application 的onCreate()的方法中调用；<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">StrictModeHelper.setPolicy(BuildConfig.DEBUG);</div></pre></td></tr></table></figure></p>
+<p> 调试时才开启，而且利用BuildConfig属性是否app在调试模式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">public class StrictModeHelper &#123;</div><div class="line">    public static void setPolicy(Boolean isDebug) &#123;</div><div class="line">        if (isDebug &amp;&amp; Build.VERSION.SDK_INT &gt;= 9) &#123;</div><div class="line">            setThreadPolicy();</div><div class="line">            setVmPolicy();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //线程策略检测</div><div class="line">    private static void setThreadPolicy() &#123;</div><div class="line">        StrictMode.ThreadPolicy.Builder builder = new StrictMode.ThreadPolicy.Builder()</div><div class="line">                .detectAll() //detectAll() 检测下述所有</div><div class="line">//                .detectCustomSlowCalls()   //自定义耗时调用</div><div class="line">//                .detectDiskReads()         //磁盘读取操作</div><div class="line">//                .detectDiskWrites()        //磁盘写入操作</div><div class="line">//                .detectNetwork()            //网络操作</div><div class="line">//                .detectResourceMismatches()  //资源类型不匹配 android 23增加</div><div class="line">                .penaltyLog();                 //打印logcat，当然也可以定位到dropbox，通过文件保存相应的log</div><div class="line">        StrictMode.setThreadPolicy(builder.build());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //虚拟机策略检测</div><div class="line">    private static void setVmPolicy() &#123;</div><div class="line">        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder()</div><div class="line">                .detectAll()                         //检测下述所有</div><div class="line">//                .detectActivityLeaks()             //Activity泄漏</div><div class="line">//                .detectLeakedClosableObjects()     //未关闭Closable对象泄漏</div><div class="line">//                .detectLeakedSqlLiteObjects()      //SqlLite对象泄漏</div><div class="line">//                .detectCleartextNetwork()           //网络流量监控 android 23增加</div><div class="line">//                .detectLeakedRegistrationObjects()   //广播或者服务等未注销导致泄漏  android 23增加</div><div class="line">//                .detectFileUriExposure()             //文件uri暴露   android增加</div><div class="line">                .penaltyLog();                        //打印logcat，当然也可以定位到dropbox，通过文件保存相应的log</div><div class="line">        StrictMode.setVmPolicy(builder.build());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Android 2.3提供一个称为严苛模式（StrictMode）的调试特性，Google称该特性已经使数百个Android上的Google应用程序受益。那它都做什么呢？它将报告与线程及虚拟机相关的策略违例。一旦检测到策略违例（policy violation），你将获得警
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="严格模式" scheme="http://yoursite.com/tags/%E4%B8%A5%E6%A0%BC%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Gradle</title>
+    <link href="http://yoursite.com/2016/09/03/Android%20Studio%20%E4%B8%ADGradle/"/>
+    <id>http://yoursite.com/2016/09/03/Android Studio 中Gradle/</id>
+    <published>2016-09-03T12:55:13.000Z</published>
+    <updated>2016-09-03T13:11:51.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Gradle是什么？</p>
+<p>Gradle 是以Groovy为基础，面向java应用，基于DSL语法的自动化构建工具。是google引入，替换ant和maven的新工具，其依赖兼容maven和ivy。</p>
+<p>使用gradle的目的:<br>更容易重用资源和代码;<br>可以更容易创建不同的版本的程序，多个类型的apk包；<br>更容易配置，扩展;<br>更好的IDE集成；</p>
+<p>首先明确gradle跟maven一样，也有一个配置文件，maven里面是叫pom.xml，而在gradle中是叫build.gradle。Android Studio中的android项目通常至少包含两个build.gradle文件，一个是project范围的，另一个是module范围的，由于一个project可以有多个module，所以每个module下都会对应一个build.gradle。这么说有点抽象，看下面这个图：<br><img src="http://img.blog.csdn.net/20150410093201149?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hkamo=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
+<h3 id="Project中build-gradle"><a href="#Project中build-gradle" class="headerlink" title="Project中build.gradle"></a>Project中build.gradle</h3><p>project下的build.gradle是基于整个project的配置，主要配置gradle 版本及 全局依赖仓库、库或者其他全部参数。<br>android studio 现在重要仓库采用jcenter(),之前版本放在mavenCentral。<br>另外有时还没有加入jcenter()仓库的第三方库，也需要在这里配置他们的库地址。<br>需要在这里配置，才能将第三方库拉下来</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">buildscript &#123;</div><div class="line">     //构建过程依赖的仓库</div><div class="line">    repositories &#123;</div><div class="line">        jcenter()</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //构建过程需要依赖的库</div><div class="line">    dependencies &#123;</div><div class="line">        //声明的是gradle插件的版本</div><div class="line">        classpath &apos;com.android.tools.build:gradle:2.0.0&apos;</div><div class="line"></div><div class="line">        // NOTE: Do not place your application dependencies here; they belong</div><div class="line">        // in the individual module build.gradle files</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">allprojects &#123;</div><div class="line">    //这里面配置整个项目依赖的仓库,这样每个module就不用配置仓库了</div><div class="line">    repositories &#123;</div><div class="line">        jcenter()</div><div class="line"></div><div class="line">        maven &#123;</div><div class="line">            // LeanCloud 的包仓库</div><div class="line">            url &quot;http://mvn.leancloud.cn/nexus/content/repositories/releases&quot;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//配置全局变量</div><div class="line">ext &#123;</div><div class="line">    // module依赖库公共版本号</div><div class="line">    SupportXVersion = &apos;23.2.0&apos;</div><div class="line">    GsonVersion = &apos;2.6.2&apos;</div><div class="line">    LeanCloudVersion = &apos;v3.13.4&apos;</div><div class="line">    JunitVersion = &apos;4.12&apos;</div><div class="line">    </div><div class="line">    compileSdkVersion = 22</div><div class="line">    buildToolsVersion = &quot;23.0.1&quot;</div><div class="line">    minSdkVersion = 10</div><div class="line">    targetSdkVersion = 22</div><div class="line">    versionCode = 34</div><div class="line">    versionName = &quot;v2.6.1&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注：</strong><em>大家可能很奇怪，为什么仓库repositories需要声明两次，这其实是由于它们作用不同，buildscript中的仓库是gradle脚本自身需要的资源，而allprojects下的仓库是项目所有模块需要的资源</em></p>
+</blockquote>
+<h3 id="module中build-gradle"><a href="#module中build-gradle" class="headerlink" title="module中build.gradle"></a>module中build.gradle</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div></pre></td><td class="code"><pre><div class="line">//申明使用插件，表明要编译的内容和产物，</div><div class="line">//com.android.application 表明该module 为android 应用</div><div class="line">//com.android.library 表明为library库</div><div class="line">//java 表名是java库</div><div class="line">apply plugin: &apos;com.android.application&apos;</div><div class="line"></div><div class="line">//安卓构建过程需要配置的参数</div><div class="line">android &#123;</div><div class="line">    //编译SDK的版本</div><div class="line">    compileSdkVersion COMPILE_SDK_VERSION as int</div><div class="line">    //buildtool 的版本</div><div class="line">    buildToolsVersion BUILD_TOOLS_VERSION</div><div class="line">    </div><div class="line">    /默认配置，会同时应用到debug和release版本上</div><div class="line">    defaultConfig &#123;</div><div class="line">        //应用包名</div><div class="line">        applicationId APPLICATION_ID</div><div class="line">        //支持最小android sdk 版本</div><div class="line">        minSdkVersion MIN_SDK_VERSION as int</div><div class="line">        // 目标版本</div><div class="line">        targetSdkVersion TARGET_SDK_VERSION as int</div><div class="line">        //应用版本号</div><div class="line">        versionCode VERSION_CODE as int</div><div class="line">        //应用版本名称</div><div class="line">        versionName VERSION_NAME</div><div class="line">        </div><div class="line">        /// 配置生成的 BuildConfig 文件中的常量，代码引用直接 </div><div class="line">        buildConfigField &quot;String&quot;, &quot;LOG_TAG&quot;, LOG_TAG // 日志tag</div><div class="line">        buildConfigField &quot;String&quot;, &quot;LOG_HTTP_TAG&quot;, LOG_TAG_HTTP // http日志tag</div><div class="line">        buildConfigField &quot;String&quot;, &quot;LOG_WEB_TAG&quot;, LOG_TAG_WEB // web日志tag</div><div class="line"></div><div class="line">      // 默认是UMENG_CHANNEL_VALUE为umeng</div><div class="line">        manifestPlaceholders = [UMENG_CHANNEL_VALUE: &quot;umeng&quot;]</div><div class="line">        </div><div class="line">      // dex突破65535的限制</div><div class="line">        multiDexEnabled true</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //java版本号</div><div class="line">    compileOptions&#123;</div><div class="line">        sourceCompatibility JavaVersion.VERSION_1_7</div><div class="line">        targetCompatibility JavaVersion.VERSION_1_7</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //签名</div><div class="line">    signingConfigs &#123;</div><div class="line">        release &#123;</div><div class="line">            //签名文件</div><div class="line">            storeFile file(STORE_FILE)</div><div class="line">            storePassword STORE_PASSWORD</div><div class="line">            keyAlias KEY_ALIAS</div><div class="line">            keyPassword KEY_PASSWORD</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    // 为了解决部分第三方库重复打包了META-INF的问题</div><div class="line">    packagingOptions &#123;</div><div class="line">        exclude &apos;META-INF/LICENSE.txt&apos;</div><div class="line">        exclude &apos;META-INF/NOTICE.txt&apos;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //移除lint检测的error</div><div class="line">    lintOptions &#123;</div><div class="line">        abortOnError false</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //编译类型</div><div class="line">    //其中debug, release是gradle默认自带的两个build type， 当然你可以定义其他类型。</div><div class="line">    //可以针对不停编译的版本中配置不同的参数，比如混淆、签名等。preview</div><div class="line">    buildTypes &#123;</div><div class="line">        debug &#123;</div><div class="line">            minifyEnabled false</div><div class="line">            zipAlignEnabled false</div><div class="line">            shrinkResources false</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">         preview &#123;</div><div class="line">            debuggable false // 是否保留调试信息</div><div class="line">            minifyEnabled true  //是否混淆</div><div class="line">            zipAlignEnabled true // 包优化</div><div class="line">            shrinkResources true // 移除不必要的资源</div><div class="line"></div><div class="line">            // 签名</div><div class="line">            signingConfig signingConfigs.release</div><div class="line">            // 代码混淆规则文件</div><div class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        release &#123;</div><div class="line">            //加上后缀</div><div class="line">            applicationIdSuffix &quot;.release&quot;</div><div class="line">            minifyEnabled true //是否混淆</div><div class="line">            zipAlignEnabled true // zip对齐优化</div><div class="line">            shrinkResources true // 移除不必要的资源</div><div class="line">            </div><div class="line">            // 不显示Log</div><div class="line">            buildConfigField &quot;boolean&quot;, &quot;LOG_DEBUG&quot;, &quot;false&quot;</div><div class="line"></div><div class="line">            // 签名</div><div class="line">            signingConfig signingConfigs.release</div><div class="line">            //混淆文件的位置</div><div class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    // 多渠道</div><div class="line">    productFlavors &#123;</div><div class="line">        //可以设置不同渠道渠道号，应用名称</div><div class="line">        dev &#123; // 开发</div><div class="line">            buildConfigField &quot;String&quot;, &quot;CHANNEL_NUMBER&quot;, &apos;&quot;11111&quot;&apos;</div><div class="line">        &#125;</div><div class="line">        &apos;360&apos; &#123;</div><div class="line">            buildConfigField &quot;String&quot;, &quot;CHANNEL_NUMBER&quot;, &apos;&quot;11112&quot;&apos;</div><div class="line">        &#125;</div><div class="line">        GooglePlay &#123;</div><div class="line">            buildConfigField &quot;String&quot;, &quot;CHANNEL_NUMBER&quot;, &quot;11113&quot;&apos;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    // 多渠道批量替换</div><div class="line">    productFlavors.all &#123; flavor -&gt;</div><div class="line">         //批量修改Manifest占位符替换</div><div class="line">        //在Manifest使用`$&#123;UMENG_CHANNEL_VALUE&#125;`,`LEANCLOUD_CHANNEL_VALUE`,打包时将替换成渠道名，例如UMENG_CHANNEL_VALUE=&quot;dev&quot;;</div><div class="line">        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name, LEANCLOUD_CHANNEL_VALUE: name]</div><div class="line">        // Project Properties-&gt;_myAPPBuildVersionName，用于程序集成下命令行修改</div><div class="line">        if (project.hasProperty(&apos;_myAPPBuildVersionName&apos;)) &#123;</div><div class="line">            defaultConfig.versionName = _myAPPBuildVersionName</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">     </div><div class="line">     //定义变量</div><div class="line">     //gradle 可以用def定义一些值例如：def KeyPassword = &quot;123123&quot; </div><div class="line">     def releaseTime() &#123;</div><div class="line">         return new Date().format(&quot;yyyy-MM-dd&quot;, TimeZone.getTimeZone(&quot;UTC&quot;))</div><div class="line">     &#125;</div><div class="line"></div><div class="line">    </div><div class="line">    // 批量打包</div><div class="line">    applicationVariants.all &#123; variant -&gt;</div><div class="line">        variant.outputs.each &#123; output -&gt;</div><div class="line">            def outputFile = output.outputFile</div><div class="line">            if (outputFile != null &amp;&amp; outputFile.name.endsWith(&apos;.apk&apos;)) &#123;</div><div class="line">                def fileName</div><div class="line">                if (variant.buildType.name.equals(&apos;release&apos;)) &#123;</div><div class="line">                    // myAPP_v版本号_渠道名.apk</div><div class="line">                    fileName = &quot;myAPP_v$&#123;variant.versionName&#125;_$&#123;variant.productFlavors[0].name&#125;.apk&quot;</div><div class="line">                &#125; else &#123;</div><div class="line">                    // myAPP_v版本号_渠道名_时间_编译类型名.apk</div><div class="line">                    fileName = &quot;myAPP_v$&#123;variant.versionName&#125;_$&#123;variant.productFlavors[0].name&#125;_$&#123;releaseTime()&#125;_$&#123;variant.buildType.name&#125;.apk&quot;</div><div class="line">                &#125;</div><div class="line">                output.outputFile = new File(outputFile.parent + &quot;/$&#123;variant.buildType.name&#125;&quot;, fileName)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //可以根据脚本的配置，将apk以abi、density进行分包</div><div class="line">    splits &#123;</div><div class="line">        abi &#123;</div><div class="line">        enable true</div><div class="line">        reset()</div><div class="line">        include &apos;armeabi&apos;, &apos;x86&apos; //, &apos;x86&apos;, &apos;armeabi-v7a&apos;, &apos;mips&apos;</div><div class="line">        universalApk false</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">//依赖第三方库</div><div class="line">dependencies &#123;</div><div class="line">   //编译libs目录下所以jar包</div><div class="line">   //compile files(&apos;libs/xxx.jar&apos;)   导入一个特定jar包</div><div class="line">    compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])//导入所有的jar包</div><div class="line">    compile project(&apos;:core&apos;)</div><div class="line">    compile &apos;com.android.support:appcompat-v7:23.1.1&apos;</div><div class="line">    compile &apos;com.android.support:design:23.1.1&apos;</div><div class="line">    compile &apos;com.android.support:recyclerview-v7:23.1.1&apos;</div><div class="line">    compile &apos;com.android.support:cardview-v7:23.1.1&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：</p>
+<ul>
+<li>buildToolsVersion这个需要你本地安装该版本才行，很多人导入新的第三方库，失败的原因之一是build version的版本不对，这个可以手动更改成你本地已有的版本或者打开 SDK Manager 去下载对应版本。</li>
+<li>proguardFiles这部分有两段，前一部分代表系统默认的android程序的混淆文件，该文件已经包含了基本的混淆声明，免去了我们很多事，这个文件的目录在 <strong>/tools/proguard/proguard-android.txt</strong> , 后一部分是我们项目里的自定义的混淆文件，目录就在 <strong>app/proguard-rules.pro</strong> ,在这个文件里你可以声明一些第三方依赖的一些混淆规则，最终混淆的结果是这两部分文件共同作用的。</li>
+<li>一般重要的信息，例如签名信息，可以直接将信息写到gradle.properties，然后在然后在build.gradle中引用即可。</li>
+<li>多渠道的关键在于定义不同的product flavor。<br>注意:这里的flavor名如果是数字开头，必须用引号引起来。</li>
+<li><code>buildTypes</code>是指建构的类型，一般只用两种默认类型 debug 和 release ，顾名思义 debug 用来配置开发过程中的一些内容；release 用来配置正式发布版本的内容。有时我们需要发布介于debug与release之间的preview 版本。</li>
+</ul>
+</blockquote>
+<h3 id="Project中setting-gradle"><a href="#Project中setting-gradle" class="headerlink" title="Project中setting.gradle"></a>Project中setting.gradle</h3><p>这个文件是全局的项目配置文件，里面主要声明Project中所包括的所有module，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//一个Project中所包括的所有module</div><div class="line">include &apos;:app&apos;, &apos;:model&apos;,&apos;:lib&apos;, &apos;:core&apos;</div></pre></td></tr></table></figure></p>
+<h3 id="Project中gradle-properties"><a href="#Project中gradle-properties" class="headerlink" title="Project中gradle.properties"></a>Project中gradle.properties</h3><p>gradle.properties为gradle的配置文件，里面可以定义一些常量供build.gradle使用，比如可以配置签名相关信息如keystore位置，密码，keyalias等,build.gradle就可以直接引用<br>gradle 中的一些配置参数建议写到gradle.properties</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">//编译版本信息</div><div class="line">APPLICATION_ID = com.jin.myAPP</div><div class="line">COMPILE_SDK_VERSION = 23</div><div class="line">BUILD_TOOLS_VERSION = 23.0.1</div><div class="line">MIN_SDK_VERSION = 15</div><div class="line">TARGET_SDK_VERSION = 1</div><div class="line">VERSION_CODE = 1</div><div class="line">VERSION_NAME = 1.0.0.0</div><div class="line"></div><div class="line">//keystore信息</div><div class="line">STORE_FILE = ../app/mykey.keystore</div><div class="line">STORE_PASSWORD = your password</div><div class="line">KEY_ALIAS = your alias</div><div class="line">KEY_PASSWORD = your password</div></pre></td></tr></table></figure>
+<h3 id="ext配置全局参数"><a href="#ext配置全局参数" class="headerlink" title="ext配置全局参数"></a>ext配置全局参数</h3><p>project的build.gradle中的ext可以为各位module进行全局配置参数，防止各个module之间的不统一，不可控。而且当我们升级sdk、build tool、target sdk等，几个module都要更改，非常的麻烦。<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">ext &#123;</div><div class="line">    compileSdkVersion = 22</div><div class="line">    buildToolsVersion = &quot;23.0.1&quot;</div><div class="line">    minSdkVersion = 10</div><div class="line">    targetSdkVersion = 22</div><div class="line">    versionCode = 34</div><div class="line">    versionName = &quot;v2.6.1&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后在各自module的build.gradle中引用：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">android &#123;</div><div class="line"></div><div class="line">    compileSdkVersion rootProject.ext.compileSdkVersion</div><div class="line"></div><div class="line">    buildToolsVersion rootProject.ext.buildToolsVersion</div><div class="line"></div><div class="line">   defaultConfig &#123;</div><div class="line"></div><div class="line">      applicationId &quot;com.xxx.xxx&quot;</div><div class="line"></div><div class="line">      minSdkVersion rootProject.ext.minSdkVersion</div><div class="line"></div><div class="line">      targetSdkVersion rootProject.ext.targetSdkVersion</div><div class="line"></div><div class="line">      versionCode rootProject.ext.versionCode</div><div class="line"></div><div class="line">      versionName rootProject.ext.versionName</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">  ```  </div><div class="line"> </div><div class="line">### resValue 定义资源。</div><div class="line"> 例如resValue &quot;string&quot; 就是字符串资源，可以用R.String 来引用对应的字符串资源</div></pre></td></tr></table></figure></p>
+<p> android {<br>     defaultConfig {<br>         resValue “string”, “build_time”, buildTime()<br>         resValue “string”, “build_host”, hostName()<br>         resValue “string”, “build_revision”, revision()<br>      }<br> }</p>
+<p>  def buildTime() {<br>     return new Date().format(“yyyy-MM-dd HH:mm:ss”)<br>  }</p>
+<p>  def hostName() {<br>     return System.getProperty(“user.name”) + “@” +InetAddress.localHost.hostName<br>   }</p>
+<p>  def revision() {<br>    def code = new ByteArrayOutputStream()<br>       exec {<br>          commandLine ‘git’, ‘rev-parse’, ‘–short’, ‘HEAD’<br>          standardOutput = code<br>        }<br>    return code.toString()<br>    }<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">上述代码实现了动态的添加了3个字符串资源: build_time、build_host、build_revision, 然后在其他地方可像如引用字符串一样使用如下：</div></pre></td></tr></table></figure></p>
+<p> // 在Activity里调用<br>getString(R.string.build_time) // 输出2015-11-07 17:01<br>getString(R.string.build_host) // 输出jay@deepin，这是我的电脑的用户名和PC名<br>getString(R.string.build_revision) // 输出3dd5823, 这是最后一次commit的sha值<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### PlaceHolder</div><div class="line"></div><div class="line">manifest的一些值我们可以用PlaceHolder处理。例如</div></pre></td></tr></table></figure></p>
+<p><meta-data android:name="UMENG_CHANNEL" android:value="${UMENG_CHANNEL_VALUE}"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">在gradle中改成</div></pre></td></tr></table></figure></meta-data></p>
+<p> manifestPlaceholders = [UMENG_CHANNEL_VALUE: “360”]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">可以放在`defaultConfig`中设置默认值，或者放在`productFlavors `中根据不同渠道修改成不同值。或者批量修改</div></pre></td></tr></table></figure></p>
+<p>  productFlavors.all {<br>        flavor -&gt; flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]<br>    }<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">###导入某个project</div><div class="line">如果你的app是多模块的，假设有两个模块app和lib,并且app模块是依赖lib的，这时候我们就需要在app模块的build.gradle中的dependencies结点下配置依赖：</div></pre></td></tr></table></figure></p>
+<p>compile project(‘:lib’)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">并且你需要在settings.gradle中把lib模块包含进来：</div></pre></td></tr></table></figure></p>
+<p>include ‘:lib’,’:app’<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">此外，这种情况下lib模块是作为库存在的，因而它的build.gradle中的插件声明通常应该是这样的：</div></pre></td></tr></table></figure></p>
+<p>apply plugin: ‘com.android.library’<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">而且，作为library的模块lib的build.gradle文件的defaultConfig中是不允许声明applicationId的，这点需要注意。</div><div class="line"></div><div class="line">### 引用本地aar：</div><div class="line">- 首先将你的库通过android studio 运行打包成aar文件。运行后在/build/output/aar文件夹中。</div><div class="line">- 首先将aar文件放到模块的libs目录下，然后在该模块的build.gradle中声明flat仓库：</div></pre></td></tr></table></figure></p>
+<p>repositories{<br>     flatDir {<br>        dirs ‘libs’<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- 最后在dependencies结点下依赖该aar模块：</div></pre></td></tr></table></figure></p>
+<p>dependencies{<br>    compile (name:’xxx’,ext:’aar’)<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">###BuildConfig  </div><div class="line">在build.gradle中配置buildConfigField参数，编译后会在..\app\build\generated\source\buildConfig文件夹下会自动生成对应版本对应module的BuildConfig.java。BuildConfig就会包含对应版本的配置信息。程序中可以直接引用这些数据。例如BuildConfig.DEBUG。</div></pre></td></tr></table></figure></p>
+<p>public final class BuildConfig {<br>    public static final boolean DEBUG = Boolean.parseBoolean(“true”);<br>    public static final String BUILD_TYPE = “debug”;<br>    public static final String FLAVOR = “360”;<br>    public static final int VERSION_CODE = 45;<br>    public static final String VERSION_NAME = “3.2.0.0”;<br>    // Fields from build type: debug<br>    public static final String HOST_IMG_SERVER = “img”;<br>    public static final String HOST_SERVER = “test”;<br>    // Fields from product flavor: 360<br>    public static final String CHANNEL_NUMBER = “232100”;<br>}</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### module 调整目录结构sourceSets</div><div class="line">默认情况下，java文件和resource文件分别在src/main/java和src/main/res目录下，在build.gradle文件，andorid&#123;&#125;里面添加下面的代码，便可以将java文件和resource文件放到src/java和src/resources目录下。</div></pre></td></tr></table></figure>
+<p>sourceSets {<br>   main {<br>      java {<br>          srcDir ‘src/java’<br>      }<br>      resources {<br>        srcDir ‘src/resources’<br>     }<br>   }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">更简便的写法是：</div></pre></td></tr></table></figure></p>
+<p>sourceSets {<br>   min.java.srcDirs = [‘src/java’]<br>   min.resources.srcDirs = [‘src/resources’]<br>}<br>```</p>
+<h3 id="Gradle常用命令"><a href="#Gradle常用命令" class="headerlink" title="Gradle常用命令"></a>Gradle常用命令</h3><p>上面大家接触了一些命令如 <strong>./gradlew -v</strong> <strong>./gradlew clean</strong> <strong>./gradlew build</strong>, 这里注意是<strong>./gradlew</strong>, <strong>./</strong>代表当前目录，<strong>gradlew</strong>代表 gradle wrapper，意思是gradle的一层包装，大家可以理解为在这个项目本地就封装了gradle，即gradle wrapper， myAPP/gradle/wrapper/gralde-wrapper.properties**文件中声明了它指向的目录和版本。只要下载成功即可用grdlew wrapper的命令代替全局的gradle命令。</p>
+<p>理解了gradle wrapper的概念，下面一些常用命令也就容易理解了。</p>
+<ul>
+<li>./gradlew  下载更新gradle</li>
+<li>./gradlew -v 版本号</li>
+<li>./gradlew assemble 构建项目输出 </li>
+<li>./gradlew check 运行检测和测试任务</li>
+<li>./gradlew clean 清除9GAG/app目录下的build文件夹</li>
+<li>./gradlew build 运行check和assemble,检查依赖并编译打包<br>这里注意的是 <strong>./gradlew build</strong> 命令把debug、release环境的包都打出来，如果正式发布只需要打Release的包，该怎么办呢，下面介绍一个很有用的命令 <strong>assemble<build type="" name=""></build></strong>, 如</li>
+<li>./gradlew assembleDebug 编译并打Debug包</li>
+<li>./gradlew assembleRelease 编译并打Release的包所有渠道的</li>
+<li>./gradlew assembleWandoujiaRelease 编译并打包豌豆荚的Release版本</li>
+<li>./gradlew assembleWandoujia 编译并打包豌豆荚的所有版本</li>
+<li>./gradlew installRelease Release模式打包并安装</li>
+<li>./gradlew uninstallRelease 卸载Release模式包</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Gradle是什么？&lt;/p&gt;
+&lt;p&gt;Gradle 是以Groovy为基础，面向java应用，基于DSL语法的自动化构建工具。是google引入，替换ant和maven的新工具，其依赖兼容maven和ivy。&lt;/p&gt;
+&lt;p&gt;使用gradle的目的:&lt;br&gt;更容易重用资源和代码
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="gradle" scheme="http://yoursite.com/tags/gradle/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《第一行代码》拾遗</title>
+    <link href="http://yoursite.com/2016/09/03/%E3%80%8A%E7%AC%AC%E4%B8%80%E8%A1%8C%E4%BB%A3%E7%A0%81%E3%80%8B%E6%8B%BE%E9%81%97/"/>
+    <id>http://yoursite.com/2016/09/03/《第一行代码》拾遗/</id>
+    <published>2016-09-03T12:55:06.000Z</published>
+    <updated>2016-09-03T13:11:08.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文是在看郭霖的《第一行代码-Android》过程中的知识点汇集，下面的摘录知识点都是我认为之前Android开发中容易忽视，或者特别重要的知识点。</p>
+<ol>
+<li>隐式启动一般依靠action、category、data进行匹配，只有activity的这三项内容能够匹配Intent指定内容时才会响应Intent。<br>每个Intent 只能指定一个action,却能指定多个category。<br>隐式启动除了能启动自己程序内的activity，还可以启动其他activity,使得Android 多个应用程序这间功能共享成为可能。</li>
+<li>自定义控件时，当将布局文件加到自定义控件中，有人喜欢<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">contentView = LayoutInflater.from(context).inflate(R.layout.my_view, null);</div><div class="line">      addView(contentView);</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果自定义只有这个布局时，其实这样更好：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LayoutInflater.from(context).inflate(R.layout.my_view, this);  //将R.layout.my_view 加到view中</div></pre></td></tr></table></figure>
+<ol>
+<li>如果需要按下Back 返回上个fragment，可以在FragmentTransaction增加addToBackStack(),就能将事物添加到返回栈中;</li>
+<li>新fragment替换旧fragment时，旧fragment 的onPause()、onStop()、onDestroyView()方法依次执行，如果替换时没有调用addToBackStack()方法，此时旧fragment就会进入销毁状态，onDestroy()和onDetach()依次执行。如果调用了addToBackStack(),则老fragment不会被销毁，按下返回键会重新回调屏幕，依次调用onCreateView()、onActivityCreated()、onStart()、onResume()方法。</li>
+<li>系统提供的openFileOutput(String fileName,int Mode);<br>创建的文件保存在/data/data/<package name="">/files/目录中，而且文件名fileName 不能包含分隔符”/“,<br>openFileInput(fileName)得到她的对应得输出流。</package></li>
+<li>PreferenceManager.getDefaultSharedPreferences(Context context)  自动使用当前应用程序的包名作为前缀来命名的SharedPreferences文件。</li>
+<li>Android 系统提供SQLiteOpenHelper帮助类，通过实现onCreate()、onUpgrade()来实现创建，升级数据库的逻辑。构建完SQLiteOpenHelper的实例之后，再调用它的getReadableDatabase()/getWritableDatabase()方法就能够创建数据库了，数据库文件会放在/data/data/<package name="">/databases/目录中。<br>另外注意数据库与数据库上的表的区别。<br>onCreate()创建了数据库，数据库创建了以后不再执行，当版本号大于数据库之前的版本号onUpgrade()才会执行，<br>而且onCreate(),onUpgrade不要外部直接调用，调用它的getReadableDatabase()/getWritableDatabase()它会按照SQLiteOpenHelper传过来的构造参数自动执行。</package></li>
+<li><p>SQLiteDatabase类为我们提供了很多种方法，而较常用的方法如下</p>
+<p>|(返回值）方法名|方法描述|<br>|—-|—-|<br>|(int) delete(String table,String whereClause,String[] whereArgs)|    删除数据行的便捷方法|<br>|(long) insert(String table,String nullColumnHack,ContentValues values)|    添加数据行的便捷方法|<br>|(int) update(String table, ContentValues values, String whereClause, String[] whereArgs)    |更新数据行的便捷方法|<br>|(void) execSQL(String sql)|执行一个SQL语句，可以是一个select或其他的sql语句|<br>|(void) close()    |关闭数据库|<br>|(Cursor) query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit)|    查询指定的数据表返回一个带游标的数据集|<br>|(Cursor) rawQuery(String sql, String[] selectionArgs)|    运行一个预置的SQL语句，返回带游标的数据集（与上面的语句最大的区别就是防止SQL注入）|</p>
+</li>
+<li><p>apk只有签名后才能在手机上安装，即使是程序开发中运行的debug版本，系统采用了默认的keyStore文件进行自动签名。</p>
+</li>
+<li>Android获取手机旋转方向和角度是通过加速度传感和地磁传感器共同计算出。</li>
+<li>服务并不是运行在一个独立的进程中的，而是依赖于创建服务时所在的应用进程。当某一个应用程序被杀掉时，所以依 赖于该进程的服务也会停止运行。另外实际服务不会自动开启线程，所有的代码都是默认运行在主线程当中的。</li>
+<li>服务中重写onCreate()、onStartCommand()和onDestroy()这三个方法。其中onCreate()方法会在服务创建的时候调用，onStartCommand()方法会在每次服务启动的时候调用，onDestroy()方法会在服务销毁的时候调用，服务中任何位置可以调用stopSelf()停止服务。</li>
+<li>一旦调用Context的startService()方法，相应的服务就会启动起来，并回调onStartCommand()方法，如果这个服务没有创建过，onCreate()方法会先于onStartCommand()方法执行。另外可以调用Context的bindService()来获取一个服务的持久连接，回调服务中的onBind()方法，如果这个服务之前没有创建过，onCreate()方法会先于onBind()方法执行。之后调用方可以获取onBind()方法中返回IBinder对象实例，可以与服务进行自由通信。</li>
+<li>当调用startService()方法后，只要调用一次stopService(),服务中的onDestroy(）方法就会执行，销毁服务。类似调用了bindService()方法后，又去调用unBindService()方法，onDestroy()也会执行，如果某服务既调用了startService()又调用了bindService()方法，必须同时调用stopService和unBindService()，onDestroy才会执行销毁服务。</li>
+<li>前台服务和普通服务最大的区别在于，它会有个正在运行的图标在系统的状态栏显示，下来状态栏后才可以看到更加详细的信息，非常类似通知的效果。</li>
+<li>从Android 4.4开始AlarmManager任务触发时间变得不再准确，有可能会延迟一段时间。这是系统在耗电性能方面的改进优化，系统会自动检测目前有多少个Alarm任务存在，然后将触发时间将近的几个任务放在一起执行，大幅度减少CPU被唤醒次数，从而有效延迟电池使用时间，如果要求执行时间必须正确无误，可以调用AlarmManager的setExact()方法替代set（），保证任务准时执行。</li>
+<li>当手机收到一条短信时候，系统就会发出一条android.provider.Telephony.SMS_RECEIVED的广播，这条广播携带这个与短信相关的所有的数据。</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文是在看郭霖的《第一行代码-Android》过程中的知识点汇集，下面的摘录知识点都是我认为之前Android开发中容易忽视，或者特别重要的知识点。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;隐式启动一般依靠action、category、data进行匹配，只有activity的这三项内容
+    
+    </summary>
+    
+      <category term="读书笔记" scheme="http://yoursite.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="《第一行代码》" scheme="http://yoursite.com/tags/%E3%80%8A%E7%AC%AC%E4%B8%80%E8%A1%8C%E4%BB%A3%E7%A0%81%E3%80%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Proguard 混淆</title>
+    <link href="http://yoursite.com/2016/09/03/procured%20%E6%B7%B7%E6%B7%86/"/>
+    <id>http://yoursite.com/2016/09/03/procured 混淆/</id>
+    <published>2016-09-03T12:54:55.000Z</published>
+    <updated>2016-09-03T13:04:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>为了防止开发APP的重要code 被泄露，我们往往需要混淆（Obfuscation code ）， 也就是把方法，字段，包和类这些java 元素的名称改成无意义的名称，这样代码结构没有变化，还可以运行，但是想弄懂代码的架构却很难。 proguard 就是这样的混淆工具，它可以分析一组class 的结构，根据用户的配置，然后把这些class 文件的可以混淆java 元素名混淆掉。在分析class 的，同时他还有其他两个功能，删除无效代码（Shrinking 收缩），和代码进行优化 （Optimization Options）。</p>
+<p>缺省情况下，proguard 会混淆所有代码，但是有些情况我们是不能改变java 元素的名称，否则就会这样就会导致程序出错。例如，用到反射的地方，我们代码依赖于系统的接口，比如被系统代码调用的回调方法，这种情况最复杂。这就需要我们在proguard-rules文件中告诉proguard 哪些java 元素是不能混淆的。</p>
+<h2 id="1-ProGuard配置"><a href="#1-ProGuard配置" class="headerlink" title="1. ProGuard配置"></a>1. ProGuard配置</h2><h3 id="ProGuard关键字"><a href="#ProGuard关键字" class="headerlink" title="ProGuard关键字"></a>ProGuard关键字</h3><h4 id="保留选项（配置不进行处理的内容）"><a href="#保留选项（配置不进行处理的内容）" class="headerlink" title="保留选项（配置不进行处理的内容）"></a>保留选项（配置不进行处理的内容）</h4><ul>
+<li>keep {Modifier} {class_specification} 保留类和类中的成员，防止它们被混淆或移除。</li>
+<li>keepclassmembers {modifier} {class_specification} 保护指定类的成员，如果此类受到保护他们会保护的更好</li>
+<li>keepclasseswithmembers {class_specification} 保留类和类中的成员，防止它们被混淆或移除，前提是指名的类中的成员必须存在，如果不存在则还是会混淆。</li>
+<li>keepnames {class_specification} 保留类和类中的成员，防止它们被混淆，但当成员没有被引用时会被移除。</li>
+<li>keepclassmembernames {class_specification} 只保留类中的成员，防止它们被混淆，但当成员没有被引用时会被移除。</li>
+<li>keepclasseswithmembernames {class_specification} 保留类和类中的成员，防止它们被混淆，但当成员没有被引用时会被移除，前提是指名的类中的成员必须存在，如果不存在则还是会混淆。</li>
+</ul>
+<h4 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h4><p>-dontshrink 不压缩输入的类文件<br>-whyareyoukeeping {class_specification}</p>
+<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>-dontoptimize 不优化输入的类文件<br>-assumenosideeffects {class_specification} 优化时假设指定的方法，没有任何副作用<br>-allowaccessmodification 优化时允许访问并修改有修饰符的类和类的成员</p>
+<h4 id="混淆"><a href="#混淆" class="headerlink" title="混淆"></a>混淆</h4><ul>
+<li>dontobfuscate 不混淆输入的类文件</li>
+<li>obfuscationdictionary {filename} 使用给定文件中的关键字作为要混淆方法的名称</li>
+<li>overloadaggressively 混淆时应用侵入式重载</li>
+<li>useuniqueclassmembernames 确定统一的混淆类的成员名称来增加混淆</li>
+<li>flattenpackagehierarchy {package_name} 重新包装所有重命名的包并放在给定的单一包中</li>
+<li>repackageclass {package_name} 重新包装所有重命名的类文件中放在给定的单一包中</li>
+<li>dontusemixedcaseclassnames 混淆时不会产生形形色色的类名</li>
+<li>keepattributes {attribute_name,…} 保护给定的可选属性，例如LineNumberTable, LocalVariableTable, SourceFile, Deprecated, Synthetic, Signature, and InnerClasses.</li>
+<li>renamesourcefileattribute {string} 设置源文件中给定的字符串常量</li>
+</ul>
+<h4 id="输出："><a href="#输出：" class="headerlink" title="输出："></a>输出：</h4><ul>
+<li>printseeds {filename} 列出类和类的成员-keep选项的清单，标准输出到给定的文件</li>
+<li>printusage {filename} </li>
+</ul>
+<h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h3><table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;field&gt;</code></td>
+<td>匹配类中的所有字段</td>
+</tr>
+<tr>
+<td><code>&lt;method&gt;</code></td>
+<td>匹配类中的所有方法</td>
+</tr>
+<tr>
+<td><code>&lt;init&gt;</code></td>
+<td>匹配类中的所有构造函数</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配任意长度字符，但不含包名分隔符(.)。比如说我们的完整类名是com.example.test.MyActivity，使用com.<em>，或者com.exmaple.</em>都是无法匹配的，因为<em>无法匹配包名中的分隔符，正确的匹配方式是com.exmaple.</em>.<em>，或者com.exmaple.test.</em>，这些都是可以的。但如果你不写任何其它内容，只有一个*，那就表示匹配所有的东西。</td>
+</tr>
+<tr>
+<td>**</td>
+<td>匹配任意长度字符，并且包含包名分隔符(.)。比如proguard-android.txt中使用的-dontwarn android.support.**就可以匹配android.support包下的所有内容，包括任意长度的子包。</td>
+</tr>
+<tr>
+<td><em>*</em></td>
+<td>匹配任意参数类型。比如void set<em>(**</em>)就能匹配任意传入的参数类型，<em>** get</em>()就能匹配任意返回值的类型。</td>
+</tr>
+<tr>
+<td>…</td>
+<td>匹配任意长度的任意类型参数。比如void test(…)就能匹配任意void test(String a)或者是void test(int a, String b)这些方法。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<ul>
+<li>在android中在android Manifest文件中的activity，service，provider， receviter，等都不能进行混淆。一些在xml中配置的view也不能进行混淆，android提供的默认配置中都有。</li>
+<li>keep和keepclasseswithmembers区别在于：keep关键字看到class *就认为应该将所有类名进行保留，不关心{}中的参数。而keepclasseswithmembers前提是{}的类中的成员必须存在，如果不存在则还是会混淆</li>
+</ul>
+</blockquote>
+<h2 id="不能混淆的东西"><a href="#不能混淆的东西" class="headerlink" title="不能混淆的东西"></a>不能混淆的东西</h2><p>  （1）Android 程序 ，下面这样代码混淆的时候要注意保留。<br> （2）Android系统组件，系统组件有固定的方法被系统调用。<br> （3） 被Android Resource 文件引用到的。名字已经固定，也不能混淆，比如自定义的View 。<br> （4）Android Parcelable ，需要使用android 序列化的。<br> （5） android.app.backup.BackupAgentHelper<br> （6） android.preference.Preference<br> （7） com.android.vending.licensing.ILicensingService<br> （8） Java序列化方法，系统序列化需要固定的方法。<br> （9） 枚举 ，系统需要处理枚举的固定方法。<br> （10）native 本地方法，不能修改本地方法名<br> （11）annotations 注释<br> （12）数据库驱动<br> （13）有些resource 文件<br> （14）用到反射的地方，比如调用aidl</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>1、打包过程中，提示 Warning: can’t find superclass or interface/ Warning: can’t find referenced class等警告信息！<br>解决方法：<br>（1） 确保你的代码是否使用这个类，如果使用了，查看对应的第三方包有没有加上去，并且是否拉下来存在项目中<br>（2）如果该类存在，工程中确实使用了这个类，就在proguard中加上<code>-keep class com.xx.yy.** { *;}</code>，让当前类不混淆。<br>（3） 确保报错的类没有在你的项目中使用到,可以使用”-dontwarn 类名正则表达式”屏蔽警告。<br>2、程序中使用泛型导致运行错误！<br>使用的泛型需要在混淆配置文件加了一个过滤泛型的语句，如下。<br>   -keepattributes Signature</p>
+<h2 id="ProGuard的输出文件及用处"><a href="#ProGuard的输出文件及用处" class="headerlink" title="ProGuard的输出文件及用处"></a>ProGuard的输出文件及用处</h2><p>混淆之后，会给我们输出一些文件，在gradle方式下是在_<project_dir>/build/proguard/</project_dir><em>目录下，ant是在</em><project_dir>/bin/proguard</project_dir><em>目录，eclipse构建在</em><project_dir>/proguard</project_dir>_目录像。<br>分别有以下文件：</p>
+<ul>
+<li>dump.txt 描述apk文件中所有类文件间的内部结构。</li>
+<li>mapping.txt 列出了原始的类，方法，和字段名与混淆后代码之间的映射。</li>
+<li>seeds.txt 列出了未被混淆的类和成员</li>
+<li>usage.txt 列出了从apk中删除的代码</li>
+</ul>
+<p>当我们发布的release版本的程序出现bug时，可以通过以上文件（特别时mapping.txt）文件找到错误原始的位置，进行bug修改。同时，可能一开始的proguard配置有错误，也可以通过错误日志，根据这些文件，找到哪些文件不应该混淆，从而修改proguard的配置。</p>
+<blockquote>
+<p>注意：重新release编译后，这些文件会被覆盖，所以每次发布程序，最好都保存一份配置文件。一般去友盟统计等统计网站分析错误时，需要上传对应的mapping.txt才能看到错误信息对应的app原始类、方法、变量名。</p>
+</blockquote>
+<h2 id="proguard-android-txt-说明"><a href="#proguard-android-txt-说明" class="headerlink" title="proguard-android.txt 说明"></a>proguard-android.txt 说明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div></pre></td><td class="code"><pre><div class="line"># This is a configuration file for ProGuard.</div><div class="line"></div><div class="line"># http://proguard.sourceforge.net/index.html#manual/usage.html</div><div class="line"></div><div class="line">#混淆时不使用大小写混合类名</div><div class="line">-dontusemixedcaseclassnames</div><div class="line"></div><div class="line">#不跳过library中的非public的类</div><div class="line">-dontskipnonpubliclibraryclasses</div><div class="line"></div><div class="line">#打印混淆的详细信息</div><div class="line">-verbose</div><div class="line"></div><div class="line"># Optimization is turned off by default. Dex does not like code run</div><div class="line"></div><div class="line"># through the ProGuard optimize and preverify steps (and performs some</div><div class="line"></div><div class="line"># of these optimizations on its own).</div><div class="line"></div><div class="line">#不进行优化，建议使用此选项，因为根据proguard-android-optimize.txt中的描述，</div><div class="line">#优化可能会造成一些潜在风险，不能保证在所有版本的Dalvik上都正常运行。</div><div class="line">-dontoptimize</div><div class="line"></div><div class="line">#不进行预校验。这个预校验是作用在Java平台上的，Android平台上不需要这项功能，去掉之后还可以加快混淆速度。</div><div class="line">-dontpreverify</div><div class="line"></div><div class="line"># Note that if you want to enable optimization, you cannot just</div><div class="line"></div><div class="line"># include optimization flags in your own project configuration file;</div><div class="line"></div><div class="line"># instead you will need to point to the</div><div class="line"></div><div class="line"># &quot;proguard-android-optimize.txt&quot; file instead of this one from your</div><div class="line"></div><div class="line"># project.properties file.</div><div class="line"></div><div class="line">#对注解中的参数进行保留。</div><div class="line">-keepattributes *Annotation*</div><div class="line"></div><div class="line">#不混淆下面声明的两个类，这两个类我们基本也用不上，是接入Google原生的一些服务时使用的。</div><div class="line">-keep public class com.google.vending.licensing.ILicensingService</div><div class="line"></div><div class="line">-keep public class com.android.vending.licensing.ILicensingService</div><div class="line"></div><div class="line"># For native methods, see http://proguard.sourceforge.net/manual/examples.html#native</div><div class="line"></div><div class="line">#不混淆任何包含native方法的类的类名以及native方法名。</div><div class="line">-keepclasseswithmembernames class * &#123;</div><div class="line">    native &lt;methods&gt;;</div><div class="line">&#125;</div><div class="line"></div><div class="line"># keep setters in Views so that animations can still work.</div><div class="line"></div><div class="line"># see http://proguard.sourceforge.net/manual/examples.html#beans</div><div class="line"></div><div class="line">#不混淆任何一个View中的setXxx()和getXxx()方法，因为属性动画需要有相应的setter和getter的方法实现，混淆了就无法工作了</div><div class="line">-keepclassmembers public class * extends android.view.View &#123;</div><div class="line">   void set*(***);</div><div class="line">   *** get*();</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"># We want to keep methods in Activity that could be used in the XML attribute onClick</div><div class="line"></div><div class="line">#不混淆Activity中参数是View的方法，因为有这样一种用法，在XML中配置android:onClick=”buttonClick”属性，</div><div class="line">#当用户点击该按钮时就会调用Activity中的buttonClick(View view)方法，如果这个方法被混淆的话就找不到了。</div><div class="line">-keepclassmembers class * extends android.app.Activity &#123;</div><div class="line">   public void *(android.view.View);</div><div class="line">&#125;</div><div class="line"></div><div class="line"># For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations</div><div class="line"></div><div class="line">#不混淆枚举中的values()和valueOf()方法，枚举我用的非常少</div><div class="line">-keepclassmembers enum * &#123;</div><div class="line">    public static **[] values();</div><div class="line">    public static ** valueOf(java.lang.String);</div><div class="line">&#125;</div><div class="line"></div><div class="line">#不混淆Parcelable实现类中的CREATOR字段，毫无疑问，CREATOR字段是绝对不能改变的，包括大小写都不能变，不然整个Parcelable工作机制都会失败</div><div class="line">-keepclassmembers class * implements android.os.Parcelable &#123;</div><div class="line"></div><div class="line">  public static final android.os.Parcelable$Creator CREATOR;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">#不混淆R文件中的所有静态字段，我们都知道R文件是通过字段来记录每个资源的id的，字段名要是被混淆了，id也就找不着了</div><div class="line">-keepclassmembers class **.R$* &#123;</div><div class="line">    public static &lt;fields&gt;;</div><div class="line">&#125;</div><div class="line"></div><div class="line"># The support library contains references to newer platform versions.</div><div class="line"></div><div class="line"># Dont warn about those in case this app is linking against an older</div><div class="line"></div><div class="line"># platform version.  We know about them, and they are safe.</div><div class="line"></div><div class="line">#对android.support包下的代码不警告，因为support包中有很多代码都是在高版本中使用的，如果我们的项目指定的版本比较低在打包时就会给予警告。不过support包中所有的代码都在版本兼容性上做足了判断，因此不用担心代码会出问题，所以直接忽略警告就可以了。</div><div class="line">-dontwarn android.support.**</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;为了防止开发APP的重要code 被泄露，我们往往需要混淆（Obfuscation code ）， 也就是把方法，字段，包和类这些java 元素的名称改成无意义的名称，这样代码结构没有变化，还可以运行，但是想弄懂代码的架构却很难。 proguard 就是这样的混淆工具，它可
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="混淆" scheme="http://yoursite.com/tags/%E6%B7%B7%E6%B7%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ADB 实用技巧</title>
+    <link href="http://yoursite.com/2016/09/03/ABD%20%E5%AE%9E%E7%94%A8%E6%8A%80%E5%B7%A7/"/>
+    <id>http://yoursite.com/2016/09/03/ABD 实用技巧/</id>
+    <published>2016-09-03T12:54:48.000Z</published>
+    <updated>2016-09-03T13:03:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="一-概述"><a href="#一-概述" class="headerlink" title="一. 概述"></a>一. 概述</h2><p>adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。<br>借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说，adb就是连接Android手机与PC端的桥梁，可以让用户在电脑上对手机进行全面的操作</p>
+<h2 id="二-命令"><a href="#二-命令" class="headerlink" title="二. 命令"></a>二. 命令</h2><h3 id="1-启动关闭adb-服务"><a href="#1-启动关闭adb-服务" class="headerlink" title="1. 启动关闭adb 服务"></a>1. 启动关闭adb 服务</h3><ul>
+<li>adb start-server    启动adb 服务</li>
+<li>adb kill-server     关闭adb 服</li>
+</ul>
+<h3 id="1-查询设备-adb-devices"><a href="#1-查询设备-adb-devices" class="headerlink" title="1. 查询设备 adb devices"></a>1. 查询设备 adb devices</h3><ul>
+<li>adb devices</li>
+</ul>
+<h3 id="2-安装软件-adb-install"><a href="#2-安装软件-adb-install" class="headerlink" title="2. 安装软件 adb install "></a>2. 安装软件 adb install <apk文件路径></apk文件路径></h3><p>可以使用apk名安装</p>
+<ul>
+<li>adb install c:\document\app.apk<br>使用package 名安装</li>
+<li>adb install com.company.app<br>重新安装<br>当已经安装过需要卸载再安装，或者使用下面命令<br>adb install r app.apk<br>多设备安装<br>adb -s 8e582a20  install app.apk<br>-s 后面是设备号，可以通过 adb devices 得到设备列表。</li>
+</ul>
+<h3 id="3-卸载-adb-uninstall"><a href="#3-卸载-adb-uninstall" class="headerlink" title="3. 卸载 adb uninstall"></a>3. 卸载 adb uninstall</h3><ul>
+<li>adb devices 确认设备</li>
+<li>adb shell pm list packages 找到安装包</li>
+<li>adb uninstall com.company.app<br>卸载某一设备上app,不保留数据和缓存目录</li>
+<li>adb -s 8e582a20  uninstall app.apk<br>卸载某一设备上app,保留数据和缓存目录</li>
+<li>adb -s 8e582a20  uninstall -k app.apk</li>
+</ul>
+<h3 id="4-进入设备或模拟器的-adb-shell"><a href="#4-进入设备或模拟器的-adb-shell" class="headerlink" title="4. 进入设备或模拟器的 adb shell"></a>4. 进入设备或模拟器的 adb shell</h3><p>　adb shell<br>　通过上面的命令，就可以进入设备或模拟器的shell环境中，在这个Linux Shell中，你可以执行各种Linux的命令，另外如果只想执行一条shell命令，<br>　adb shell dmesg会打印出内核的调试信息。
+　</p>
+<h3 id="6-从电脑上发送文件到设备"><a href="#6-从电脑上发送文件到设备" class="headerlink" title="6. 从电脑上发送文件到设备"></a>6. 从电脑上发送文件到设备</h3><p>adb push &lt;本地路径&gt; &lt;远程路径&gt;<br>用push命令可以把本机电脑上的文件或者文件夹复制到设备(手机)</p>
+<h3 id="7-从设备上下载文件到电脑"><a href="#7-从设备上下载文件到电脑" class="headerlink" title="7. 从设备上下载文件到电脑"></a>7. 从设备上下载文件到电脑</h3><p>　adb pull &lt;远程路径&gt; &lt;本地路径&gt;<br>用pull命令可以把设备(手机)上的文件或者文件夹复制到本机电脑</p>
+<h3 id="8、查看bug报告"><a href="#8、查看bug报告" class="headerlink" title="8、查看bug报告"></a>8、查看bug报告</h3><p>adb bugreport</p>
+<h3 id="10、获取设备的ID和序列号"><a href="#10、获取设备的ID和序列号" class="headerlink" title="10、获取设备的ID和序列号"></a>10、获取设备的ID和序列号</h3><p>adb get-product<br>adb get-serialno</p>
+<h2 id="11、获取内存状况"><a href="#11、获取内存状况" class="headerlink" title="11、获取内存状况"></a>11、获取内存状况</h2><p>adb shell dumpsys meminfo <package name=""></package></p>
+<h2 id="12、电量"><a href="#12、电量" class="headerlink" title="12、电量"></a>12、电量</h2><p>获取手机电池信息<br>adb shell dumpsys battery <package name=""><br>获取手机电量消耗<br>adb shell dumpsys batterystats  com.Package.name<br>获取某个应用的电量消耗<br>adb shell dumpsys batterystats  com.Package.name</package></p>
+<p>将信息输出到文件中<br>adb shell dumpsys batterystats com.package.nae &gt; battery.txt</p>
+<blockquote>
+<p>文件在project中</p>
+</blockquote>
+<p>　
+　
+　
+　
+　</p>
+<h3 id="5-运行"><a href="#5-运行" class="headerlink" title="5. 运行"></a>5. 运行</h3><p>adb -s 8e582a20  shell am start -n com.company.app/com.company.Main</p>
+<blockquote>
+<p>注：8e582a20  是设备号，使用<code>adb device</code>命令可以查到,如果是连接多个设备需要指明设备号，如果一直有一个可以不用添加<code>-s 8e582a20</code></p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;一-概述&quot;&gt;&lt;a href=&quot;#一-概述&quot; class=&quot;headerlink&quot; title=&quot;一. 概述&quot;&gt;&lt;/a&gt;一. 概述&lt;/h2&gt;&lt;p&gt;adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="ADB" scheme="http://yoursite.com/tags/ADB/"/>
+    
+  </entry>
+  
+  <entry>
     <title>懒加载</title>
     <link href="http://yoursite.com/2016/09/03/%E6%87%92%E5%8A%A0%E8%BD%BD/"/>
     <id>http://yoursite.com/2016/09/03/懒加载/</id>
     <published>2016-09-03T06:49:07.000Z</published>
-    <updated>2016-09-03T07:13:57.000Z</updated>
+    <updated>2016-09-03T13:01:14.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近在重构公司公司的主页，其中用到了懒加载，所以找了网上的懒加载的介绍的博客，读了好几篇关于懒加载的文件，发现不是讲解太简单，就是代码不够清晰，而且在懒加载的实现原理上没有透彻的讲清楚，在实际应用实践中会发现各种不同问题。小弟不才，愿意认真分析懒加载的原理实现与应用，希望对各位看官有些收获。</p>
 <p>在使用viewpager（或其他容器）与多个Fragment来组合使用，ViewPager 会默认一次加载当前页面前后隔一个页面，即使设置setofflimit（0）也无效果，也会预加载。这样把我们看不到的页面的数据也加载了，大大降低了性能，浪费初始化资源。然而我们就采用懒加载技术，只让用户看到的页面才会加载他的数据，大大提高效率。</p>
@@ -42,33 +909,10 @@
     
     </summary>
     
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
     
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://yoursite.com/2016/09/03/hello-world/"/>
-    <id>http://yoursite.com/2016/09/03/hello-world/</id>
-    <published>2016-09-03T06:19:25.000Z</published>
-    <updated>2016-09-03T07:12:53.000Z</updated>
     
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
-    
-    </summary>
-    
+      <category term="懒加载" scheme="http://yoursite.com/tags/%E6%87%92%E5%8A%A0%E8%BD%BD/"/>
     
   </entry>
   
