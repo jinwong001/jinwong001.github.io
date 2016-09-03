@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Jinwong001</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Jinwong001">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Jinwong001">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jinwong001">
+  
+    <link rel="alternate" href="/atom.xml" title="Jinwong001" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jinwong001</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-懒加载" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/03/懒加载/" class="article-date">
+  <time datetime="2016-09-03T06:49:07.000Z" itemprop="datePublished">2016-09-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/03/懒加载/">懒加载</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在重构公司公司的主页，其中用到了懒加载，所以找了网上的懒加载的介绍的博客，读了好几篇关于懒加载的文件，发现不是讲解太简单，就是代码不够清晰，而且在懒加载的实现原理上没有透彻的讲清楚，在实际应用实践中会发现各种不同问题。小弟不才，愿意认真分析懒加载的原理实现与应用，希望对各位看官有些收获。</p>
+<p>在使用viewpager（或其他容器）与多个Fragment来组合使用，ViewPager 会默认一次加载当前页面前后隔一个页面，即使设置setofflimit（0）也无效果，也会预加载。这样把我们看不到的页面的数据也加载了，大大降低了性能，浪费初始化资源。然而我们就采用懒加载技术，只让用户看到的页面才会加载他的数据，大大提高效率。</p>
+<p>主要的方法是Fragment中的setUserVisibleHint()，此方法会在onCreateView(）之前执行，当viewPager中fragment改变可见状态时也会调用,当fragment 从可见到不见，或者从不可见切换到可见，都会调用此方法，使用getUserVisibleHint() 可以返回fragment是否可见状态。</p>
+<p>onLazyLoad() 加载数据必须满足三个条件：</p>
+<ul>
+<li>getUserVisibleHint()会返回是否可见状态，这是fragment实现懒加载的关键,只有fragment 可见才会调用onLazyLoad() 加载数据。</li>
+<li>isPrepared参数在系统调用onActivityCreated时设置为true,这时onCreateView方法已调用完毕(一般我们在这方法里执行findviewbyid等方法),确保 onLazyLoad()方法不会报空指针异常。</li>
+<li>isLazyLoaded确保ViewPager来回切换时BaseFragment的initData方法不会被重复调用，onLazyLoad在该Fragment的整个生命周期只调用一次,第一次调用onLazyLoad()方法后马上执行 isLazyLoaded = true。</li>
+</ul>
+<p>另外我们在BaseLazyFragment 中需要在onActivityCreated()及setUserVisibleHint()方法中都调了一次lazyLoad() 方法。如果仅仅在setUserVisibleHint()调用lazyLoad()，当默认首页首先加载时会导致viewPager的首页第一次展示时没有数据显示，切换一下才会有数据。因为首页fragment的setUserVisible()在onActivityCreated() 之前调用，此时isPrepared为false 导致首页fragment 没能调用onLazyLoad()方法加载数据。<br>实现代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 懒加载fragment基类</div><div class="line"> * Created by wanny on 16/7/18.</div><div class="line"> */</div><div class="line">public abstract class BaseLazyFragment extends BaseFragment &#123;</div><div class="line">    /**</div><div class="line">     * 懒加载过</div><div class="line">     */</div><div class="line">    private boolean isLazyLoaded;</div><div class="line"></div><div class="line">    private boolean isPrepared;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onActivityCreated(@Nullable Bundle savedInstanceState) &#123;</div><div class="line">        super.onActivityCreated(savedInstanceState);</div><div class="line">        isPrepared = true;</div><div class="line">        //只有Fragment onCreateView好了，</div><div class="line">        //另外这里调用一次lazyLoad(）</div><div class="line">        lazyLoad();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void setUserVisibleHint(boolean isVisibleToUser) &#123;</div><div class="line">        super.setUserVisibleHint(isVisibleToUser);</div><div class="line">        lazyLoad();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 调用懒加载</div><div class="line">     */</div><div class="line"></div><div class="line">    private void lazyLoad() &#123;</div><div class="line">        if (getUserVisibleHint() &amp;&amp; isPrepared &amp;&amp; !isLazyLoaded) &#123;</div><div class="line">            onLazyLoad();</div><div class="line">            isLazyLoaded = true;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @UiThread</div><div class="line">    public abstract void onLazyLoad();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后我们再继承这个BaseLazyFragment 实现onLazyLoad() 方法就行。他会自动控制当fragment 展现出来时，才会加载数据。。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/03/懒加载/" data-id="cismutxym00014dutlcz8fcuy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/03/hello-world/" class="article-date">
+  <time datetime="2016-09-03T06:19:25.000Z" itemprop="datePublished">2016-09-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/03/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/03/hello-world/" data-id="cismutxyh00004dutyrk8kcp4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/03/懒加载/">懒加载</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/03/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 jinwong001<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
