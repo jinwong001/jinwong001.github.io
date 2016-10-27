@@ -4,6 +4,84 @@
   
     
     <entry>
+      <title></title>
+      <url>http://yoursite.com/2016/10/27/ABD%20%E5%AE%9E%E7%94%A8%E6%8A%80%E5%B7%A7/</url>
+      <content type="html"><![CDATA[<h2 id="一-概述"><a href="#一-概述" class="headerlink" title="一. 概述"></a>一. 概述</h2><p>adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。<br>借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说，adb就是连接Android手机与PC端的桥梁，可以让用户在电脑上对手机进行全面的操作</p>
+<h2 id="二-命令"><a href="#二-命令" class="headerlink" title="二. 命令"></a>二. 命令</h2><h3 id="1-启动关闭adb-服务"><a href="#1-启动关闭adb-服务" class="headerlink" title="1. 启动关闭adb 服务"></a>1. 启动关闭adb 服务</h3><ul>
+<li>adb start-server    启动adb 服务</li>
+<li>adb kill-server     关闭adb 服</li>
+</ul>
+<h3 id="2-查询设备-adb-devices"><a href="#2-查询设备-adb-devices" class="headerlink" title="2. 查询设备 adb devices"></a>2. 查询设备 adb devices</h3><ul>
+<li>adb devices</li>
+</ul>
+<h3 id="3-安装软件-adb-install"><a href="#3-安装软件-adb-install" class="headerlink" title="3. 安装软件 adb install "></a>3. 安装软件 adb install <apk文件路径></apk文件路径></h3><ul>
+<li>使用apk名安装<br>adb install c:\document\app.apk<br>也使用package 名安装<br>adb install com.company.app</li>
+<li>重新安装，保留数据和缓存文件<br>adb install -r app.apk</li>
+<li>安装到sd卡中<br>adb install -s app.apk</li>
+<li>多设备安装<br>adb -s 8e582a20  install app.apk<br>-s 后面是设备号，可以通过 adb devices 得到设备列表。</li>
+</ul>
+<h3 id="4-卸载-adb-uninstall"><a href="#4-卸载-adb-uninstall" class="headerlink" title="4. 卸载 adb uninstall"></a>4. 卸载 adb uninstall</h3><ul>
+<li>adb devices 确认设备</li>
+<li>adb shell pm list packages 找到安装包</li>
+<li>adb uninstall com.company.app<br>卸载某一设备上app,不保留数据和缓存目录</li>
+<li>adb -s 8e582a20  uninstall app.apk<br>卸载某一设备上app,保留数据和缓存目录</li>
+<li>adb -s 8e582a20  uninstall -k app.apk</li>
+<li><h3 id="5-启动-停止服务"><a href="#5-启动-停止服务" class="headerlink" title="5. 启动/停止服务"></a>5. 启动/停止服务</h3>当有事adb服务异常时，需要重新停止启动服务</li>
+<li>启动adb server:<br>adb start-server</li>
+<li>停止adb server:<br>adb kill-server</li>
+</ul>
+<h3 id="6-查看日志logcat"><a href="#6-查看日志logcat" class="headerlink" title="6. 查看日志logcat"></a>6. 查看日志logcat</h3><p>adb logcat</p>
+<ul>
+<li>显示tag为“xyz”的log信息<br>adb logcat -s xyz</li>
+<li>将logx信息保存到手机指定目录下<br>adb logcat -f /sdcard/log.txt</li>
+<li>输出log详细时间<br>adb logcat -v time</li>
+<li>利用grep 过滤log<br>adb logcat |grep xyz   </li>
+<li>将logcat 输出保存到pc中文本中<br>adb logcat &gt;log.txt</li>
+</ul>
+<h3 id="7、查看日志分析bugreport"><a href="#7、查看日志分析bugreport" class="headerlink" title="7、查看日志分析bugreport"></a>7、查看日志分析bugreport</h3><p>bugreport是Android 自带的日志分析系统，包含系统启动log,系统状态和详细的进程、虚拟机、缓存、内存等信息<br>adb bugreport<br>将bugreport导出<br>adb bugreport &gt; bugreport.log</p>
+<h3 id="8-重启"><a href="#8-重启" class="headerlink" title="8. 重启"></a>8. 重启</h3><p>adb reboot</p>
+<h3 id="9-数据传输"><a href="#9-数据传输" class="headerlink" title="9. 数据传输"></a>9. 数据传输</h3><ul>
+<li><p>adb push &lt;本地路径&gt; &lt;远程路径&gt;<br>用push命令可以把本机电脑上的文件或者文件夹复制到设备(手机)</p>
+</li>
+<li><p>adb pull &lt;远程路径&gt; &lt;本地路径&gt;<br>用pull命令可以把设备(手机)上的文件或者文件夹复制到本机电脑</p>
+</li>
+</ul>
+<h3 id="10-查看adb版本"><a href="#10-查看adb版本" class="headerlink" title="10. 查看adb版本"></a>10. 查看adb版本</h3><p>adb version</p>
+<h3 id="11、获取设备的ID和序列号"><a href="#11、获取设备的ID和序列号" class="headerlink" title="11、获取设备的ID和序列号"></a>11、获取设备的ID和序列号</h3><p>adb get-product<br>adb get-serialno</p>
+<h3 id="12-shell命令"><a href="#12-shell命令" class="headerlink" title="12. shell命令"></a>12. shell命令</h3><p>　adb shell 就可以进入设备或模拟器的shell环境中，在这个Linux Shell中，你可以执行各种Linux的命令，另外如果只想执行一条shell命令，例如：<br>adb shell dmesg会打印出内核的调试信息。</p>
+<h4 id="1-包管理"><a href="#1-包管理" class="headerlink" title="1. 包管理"></a>1. 包管理</h4><ul>
+<li>列出手机中所有app包名<br>adb shell pm list packages</li>
+<li>列出手机系统应用所有包名<br>adb shell pm list packages -s</li>
+<li>列出手机第三方应用包名<br>adb shell pm list packages -3<br>过滤包名<br>adb shell pm list packages|grep qq</li>
+</ul>
+<h4 id="2-手机录屏"><a href="#2-手机录屏" class="headerlink" title="2. 手机录屏"></a>2. 手机录屏</h4><ul>
+<li>默认录制180s,录制比例为4Mbps<br>adb shell screenrecord  /sdcard/video.mp4                 </li>
+<li>指定视频分辨率<br>adb shell screenrecord –size 1280*720 /sdcard/video.mp4   </li>
+<li>指定时间<br>adb shell screeenrecord –time-limit 200 /sdcard/video.mp4</li>
+</ul>
+<h4 id="3、电量"><a href="#3、电量" class="headerlink" title="3、电量"></a>3、电量</h4><ul>
+<li>获取手机电池信息<br>adb shell dumpsys battery <package name=""></package></li>
+<li>获取手机电量消耗<br>adb shell dumpsys batterystats  com.Package.name</li>
+<li>获取某个应用的电量消耗<br>adb shell dumpsys batterystats  com.Package.name</li>
+<li>将电量信息输出到文件中<br>adb shell dumpsys batterystats com.package.nae &gt; battery.txt</li>
+</ul>
+<h4 id="3-其他adb-shell-命令"><a href="#3-其他adb-shell-命令" class="headerlink" title="3. 其他adb shell 命令"></a>3. 其他adb shell 命令</h4><ul>
+<li>清理应用数据和缓存<br>adb shell pm clear <packagename>      </packagename></li>
+<li>启动应用<br>adb shell am start -n com.company.demo/.SplashActivity     </li>
+<li>强行停止应用<br>adb shell am force-stop <packagename>       </packagename></li>
+<li>查看屏幕分辨率<br>adb shell wm size</li>
+<li>查看屏幕密度<br>adb shell wm density</li>
+<li>查看帮助指令<br>adb shell pm help<br>adb shell am help </li>
+<li>截屏<br>adb shell screencap -p /sdcard/screenshot.png</li>
+<li>获取内存状况<br>adb shell dumpsys meminfo <package name=""></package></li>
+</ul>
+<blockquote>
+<p>更多的参考：<br><a href="https://github.com/mzlogin/awesome-adb" target="_blank" rel="external">https://github.com/mzlogin/awesome-adb</a></p>
+</blockquote>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[数组类型不同解析问题探究]]></title>
       <url>http://yoursite.com/2016/09/03/%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B%E4%B8%8D%E5%90%8C%E8%A7%A3%E6%9E%90%E9%97%AE%E9%A2%98%E6%8E%A2%E7%A9%B6/</url>
       <content type="html"><![CDATA[<p>我们在开发过程中可以遇到json 数组中的具体的javaBean 不一致现象。例如：</p>
@@ -517,7 +595,7 @@
     
     <entry>
       <title><![CDATA[Proguard 混淆]]></title>
-      <url>http://yoursite.com/2016/09/03/procured%20%E6%B7%B7%E6%B7%86/</url>
+      <url>http://yoursite.com/2016/09/03/proguard%20%E6%B7%B7%E6%B7%86/</url>
       <content type="html"><![CDATA[<p>为了防止开发APP的重要code 被泄露，我们往往需要混淆（Obfuscation code ）， 也就是把方法，字段，包和类这些java 元素的名称改成无意义的名称，这样代码结构没有变化，还可以运行，但是想弄懂代码的架构却很难。 proguard 就是这样的混淆工具，它可以分析一组class 的结构，根据用户的配置，然后把这些class 文件的可以混淆java 元素名混淆掉。在分析class 的，同时他还有其他两个功能，删除无效代码（Shrinking 收缩），和代码进行优化 （Optimization Options）。</p>
 <p>缺省情况下，proguard 会混淆所有代码，但是有些情况我们是不能改变java 元素的名称，否则就会这样就会导致程序出错。例如，用到反射的地方，我们代码依赖于系统的接口，比如被系统代码调用的回调方法，这种情况最复杂。这就需要我们在proguard-rules文件中告诉proguard 哪些java 元素是不能混淆的。</p>
 <h2 id="1-ProGuard配置"><a href="#1-ProGuard配置" class="headerlink" title="1. ProGuard配置"></a>1. ProGuard配置</h2><h3 id="ProGuard关键字"><a href="#ProGuard关键字" class="headerlink" title="ProGuard关键字"></a>ProGuard关键字</h3><h4 id="保留选项（配置不进行处理的内容）"><a href="#保留选项（配置不进行处理的内容）" class="headerlink" title="保留选项（配置不进行处理的内容）"></a>保留选项（配置不进行处理的内容）</h4><ul>
@@ -603,53 +681,6 @@
 <p>注意：重新release编译后，这些文件会被覆盖，所以每次发布程序，最好都保存一份配置文件。一般去友盟统计等统计网站分析错误时，需要上传对应的mapping.txt才能看到错误信息对应的app原始类、方法、变量名。</p>
 </blockquote>
 <h2 id="proguard-android-txt-说明"><a href="#proguard-android-txt-说明" class="headerlink" title="proguard-android.txt 说明"></a>proguard-android.txt 说明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div></pre></td><td class="code"><pre><div class="line"># This is a configuration file for ProGuard.</div><div class="line"></div><div class="line"># http://proguard.sourceforge.net/index.html#manual/usage.html</div><div class="line"></div><div class="line">#混淆时不使用大小写混合类名</div><div class="line">-dontusemixedcaseclassnames</div><div class="line"></div><div class="line">#不跳过library中的非public的类</div><div class="line">-dontskipnonpubliclibraryclasses</div><div class="line"></div><div class="line">#打印混淆的详细信息</div><div class="line">-verbose</div><div class="line"></div><div class="line"># Optimization is turned off by default. Dex does not like code run</div><div class="line"></div><div class="line"># through the ProGuard optimize and preverify steps (and performs some</div><div class="line"></div><div class="line"># of these optimizations on its own).</div><div class="line"></div><div class="line">#不进行优化，建议使用此选项，因为根据proguard-android-optimize.txt中的描述，</div><div class="line">#优化可能会造成一些潜在风险，不能保证在所有版本的Dalvik上都正常运行。</div><div class="line">-dontoptimize</div><div class="line"></div><div class="line">#不进行预校验。这个预校验是作用在Java平台上的，Android平台上不需要这项功能，去掉之后还可以加快混淆速度。</div><div class="line">-dontpreverify</div><div class="line"></div><div class="line"># Note that if you want to enable optimization, you cannot just</div><div class="line"></div><div class="line"># include optimization flags in your own project configuration file;</div><div class="line"></div><div class="line"># instead you will need to point to the</div><div class="line"></div><div class="line"># &quot;proguard-android-optimize.txt&quot; file instead of this one from your</div><div class="line"></div><div class="line"># project.properties file.</div><div class="line"></div><div class="line">#对注解中的参数进行保留。</div><div class="line">-keepattributes *Annotation*</div><div class="line"></div><div class="line">#不混淆下面声明的两个类，这两个类我们基本也用不上，是接入Google原生的一些服务时使用的。</div><div class="line">-keep public class com.google.vending.licensing.ILicensingService</div><div class="line"></div><div class="line">-keep public class com.android.vending.licensing.ILicensingService</div><div class="line"></div><div class="line"># For native methods, see http://proguard.sourceforge.net/manual/examples.html#native</div><div class="line"></div><div class="line">#不混淆任何包含native方法的类的类名以及native方法名。</div><div class="line">-keepclasseswithmembernames class * &#123;</div><div class="line">    native &lt;methods&gt;;</div><div class="line">&#125;</div><div class="line"></div><div class="line"># keep setters in Views so that animations can still work.</div><div class="line"></div><div class="line"># see http://proguard.sourceforge.net/manual/examples.html#beans</div><div class="line"></div><div class="line">#不混淆任何一个View中的setXxx()和getXxx()方法，因为属性动画需要有相应的setter和getter的方法实现，混淆了就无法工作了</div><div class="line">-keepclassmembers public class * extends android.view.View &#123;</div><div class="line">   void set*(***);</div><div class="line">   *** get*();</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"># We want to keep methods in Activity that could be used in the XML attribute onClick</div><div class="line"></div><div class="line">#不混淆Activity中参数是View的方法，因为有这样一种用法，在XML中配置android:onClick=”buttonClick”属性，</div><div class="line">#当用户点击该按钮时就会调用Activity中的buttonClick(View view)方法，如果这个方法被混淆的话就找不到了。</div><div class="line">-keepclassmembers class * extends android.app.Activity &#123;</div><div class="line">   public void *(android.view.View);</div><div class="line">&#125;</div><div class="line"></div><div class="line"># For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations</div><div class="line"></div><div class="line">#不混淆枚举中的values()和valueOf()方法，枚举我用的非常少</div><div class="line">-keepclassmembers enum * &#123;</div><div class="line">    public static **[] values();</div><div class="line">    public static ** valueOf(java.lang.String);</div><div class="line">&#125;</div><div class="line"></div><div class="line">#不混淆Parcelable实现类中的CREATOR字段，毫无疑问，CREATOR字段是绝对不能改变的，包括大小写都不能变，不然整个Parcelable工作机制都会失败</div><div class="line">-keepclassmembers class * implements android.os.Parcelable &#123;</div><div class="line"></div><div class="line">  public static final android.os.Parcelable$Creator CREATOR;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">#不混淆R文件中的所有静态字段，我们都知道R文件是通过字段来记录每个资源的id的，字段名要是被混淆了，id也就找不着了</div><div class="line">-keepclassmembers class **.R$* &#123;</div><div class="line">    public static &lt;fields&gt;;</div><div class="line">&#125;</div><div class="line"></div><div class="line"># The support library contains references to newer platform versions.</div><div class="line"></div><div class="line"># Dont warn about those in case this app is linking against an older</div><div class="line"></div><div class="line"># platform version.  We know about them, and they are safe.</div><div class="line"></div><div class="line">#对android.support包下的代码不警告，因为support包中有很多代码都是在高版本中使用的，如果我们的项目指定的版本比较低在打包时就会给予警告。不过support包中所有的代码都在版本兼容性上做足了判断，因此不用担心代码会出问题，所以直接忽略警告就可以了。</div><div class="line">-dontwarn android.support.**</div></pre></td></tr></table></figure>]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[ADB 实用技巧]]></title>
-      <url>http://yoursite.com/2016/09/03/ABD%20%E5%AE%9E%E7%94%A8%E6%8A%80%E5%B7%A7/</url>
-      <content type="html"><![CDATA[<h2 id="一-概述"><a href="#一-概述" class="headerlink" title="一. 概述"></a>一. 概述</h2><p>adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。<br>借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说，adb就是连接Android手机与PC端的桥梁，可以让用户在电脑上对手机进行全面的操作</p>
-<h2 id="二-命令"><a href="#二-命令" class="headerlink" title="二. 命令"></a>二. 命令</h2><h3 id="1-启动关闭adb-服务"><a href="#1-启动关闭adb-服务" class="headerlink" title="1. 启动关闭adb 服务"></a>1. 启动关闭adb 服务</h3><ul>
-<li>adb start-server    启动adb 服务</li>
-<li>adb kill-server     关闭adb 服</li>
-</ul>
-<h3 id="1-查询设备-adb-devices"><a href="#1-查询设备-adb-devices" class="headerlink" title="1. 查询设备 adb devices"></a>1. 查询设备 adb devices</h3><ul>
-<li>adb devices</li>
-</ul>
-<h3 id="2-安装软件-adb-install"><a href="#2-安装软件-adb-install" class="headerlink" title="2. 安装软件 adb install "></a>2. 安装软件 adb install <apk文件路径></apk文件路径></h3><p>可以使用apk名安装</p>
-<ul>
-<li>adb install c:\document\app.apk<br>使用package 名安装</li>
-<li>adb install com.company.app<br>重新安装<br>当已经安装过需要卸载再安装，或者使用下面命令<br>adb install r app.apk<br>多设备安装<br>adb -s 8e582a20  install app.apk<br>-s 后面是设备号，可以通过 adb devices 得到设备列表。</li>
-</ul>
-<h3 id="3-卸载-adb-uninstall"><a href="#3-卸载-adb-uninstall" class="headerlink" title="3. 卸载 adb uninstall"></a>3. 卸载 adb uninstall</h3><ul>
-<li>adb devices 确认设备</li>
-<li>adb shell pm list packages 找到安装包</li>
-<li>adb uninstall com.company.app<br>卸载某一设备上app,不保留数据和缓存目录</li>
-<li>adb -s 8e582a20  uninstall app.apk<br>卸载某一设备上app,保留数据和缓存目录</li>
-<li>adb -s 8e582a20  uninstall -k app.apk</li>
-</ul>
-<h3 id="4-进入设备或模拟器的-adb-shell"><a href="#4-进入设备或模拟器的-adb-shell" class="headerlink" title="4. 进入设备或模拟器的 adb shell"></a>4. 进入设备或模拟器的 adb shell</h3><p>　adb shell<br>　通过上面的命令，就可以进入设备或模拟器的shell环境中，在这个Linux Shell中，你可以执行各种Linux的命令，另外如果只想执行一条shell命令，<br>　adb shell dmesg会打印出内核的调试信息。
-　</p>
-<h3 id="6-从电脑上发送文件到设备"><a href="#6-从电脑上发送文件到设备" class="headerlink" title="6. 从电脑上发送文件到设备"></a>6. 从电脑上发送文件到设备</h3><p>adb push &lt;本地路径&gt; &lt;远程路径&gt;<br>用push命令可以把本机电脑上的文件或者文件夹复制到设备(手机)</p>
-<h3 id="7-从设备上下载文件到电脑"><a href="#7-从设备上下载文件到电脑" class="headerlink" title="7. 从设备上下载文件到电脑"></a>7. 从设备上下载文件到电脑</h3><p>　adb pull &lt;远程路径&gt; &lt;本地路径&gt;<br>用pull命令可以把设备(手机)上的文件或者文件夹复制到本机电脑</p>
-<h3 id="8、查看bug报告"><a href="#8、查看bug报告" class="headerlink" title="8、查看bug报告"></a>8、查看bug报告</h3><p>adb bugreport</p>
-<h3 id="10、获取设备的ID和序列号"><a href="#10、获取设备的ID和序列号" class="headerlink" title="10、获取设备的ID和序列号"></a>10、获取设备的ID和序列号</h3><p>adb get-product<br>adb get-serialno</p>
-<h2 id="11、获取内存状况"><a href="#11、获取内存状况" class="headerlink" title="11、获取内存状况"></a>11、获取内存状况</h2><p>adb shell dumpsys meminfo <package name=""></package></p>
-<h2 id="12、电量"><a href="#12、电量" class="headerlink" title="12、电量"></a>12、电量</h2><p>获取手机电池信息<br>adb shell dumpsys battery <package name=""><br>获取手机电量消耗<br>adb shell dumpsys batterystats  com.Package.name<br>获取某个应用的电量消耗<br>adb shell dumpsys batterystats  com.Package.name</package></p>
-<p>将信息输出到文件中<br>adb shell dumpsys batterystats com.package.nae &gt; battery.txt</p>
-<blockquote>
-<p>文件在project中</p>
-</blockquote>
-<p>　
-　
-　
-　
-　</p>
-<h3 id="5-运行"><a href="#5-运行" class="headerlink" title="5. 运行"></a>5. 运行</h3><p>adb -s 8e582a20  shell am start -n com.company.app/com.company.Main</p>
-<blockquote>
-<p>注：8e582a20  是设备号，使用<code>adb device</code>命令可以查到,如果是连接多个设备需要指明设备号，如果一直有一个可以不用添加<code>-s 8e582a20</code></p>
-</blockquote>
-]]></content>
     </entry>
     
     <entry>

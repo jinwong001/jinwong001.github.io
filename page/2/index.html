@@ -273,8 +273,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/09/03/procured 混淆/" itemprop="url">
-                  Proguard 混淆
+                <a class="post-title-link" href="/2016/09/03/《第一行代码》拾遗/" itemprop="url">
+                  《第一行代码》拾遗
                 </a>
               
             
@@ -287,7 +287,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-03T12:54:55Z" content="2016-09-03">
+            <time itemprop="dateCreated" datetime="2016-09-03T12:55:06Z" content="2016-09-03">
               2016-09-03
             </time>
           </span>
@@ -301,8 +301,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
                   </a>
                 </span>
 
@@ -317,8 +317,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/03/procured 混淆/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/procured 混淆/" itemprop="commentsCount"></span>
+                <a href="/2016/09/03/《第一行代码》拾遗/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/《第一行代码》拾遗/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -343,11 +343,13 @@
       
         
           
-          为了防止开发APP的重要code 被泄露，我们往往需要混淆（Obfuscation code ）， 也就是把方法，字段，包和类这些java 元素的名称改成无意义的名称，这样代码结构没有变化，还可以运行，但是想弄懂代码的架构却很难。 proguard 就是这样的混淆工具，它可以分析一组class 的结构，根据用户的配置，然后把这些class 文件的可以混淆java 元素名混淆掉。在分析class 的，同时他还有其他两个功能，删除无效代码（Shrinking 收缩），和代码进行优化 （Optimiz
+          本文是在看郭霖的《第一行代码-Android》过程中的知识点汇集，下面的摘录知识点都是我认为之前Android开发中容易忽视，或者特别重要的知识点。
+
+隐式启动一般依靠action、category、data进行匹配，只有activity的这三项内容能够匹配Intent指定内容时才会响应Intent。每个Intent 只能指定一个action,却能指定多个category。隐式启动除了能启动自己程序内的activity，还可以启动其他activity,使得Android 多个应用程序这间功能共享
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/09/03/procured 混淆/#more" rel="contents">
+            <a class="btn" href="/2016/09/03/《第一行代码》拾遗/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -398,8 +400,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/09/03/ABD 实用技巧/" itemprop="url">
-                  ADB 实用技巧
+                <a class="post-title-link" href="/2016/09/03/proguard 混淆/" itemprop="url">
+                  Proguard 混淆
                 </a>
               
             
@@ -412,7 +414,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-03T12:54:48Z" content="2016-09-03">
+            <time itemprop="dateCreated" datetime="2016-09-03T12:54:55Z" content="2016-09-03">
               2016-09-03
             </time>
           </span>
@@ -442,8 +444,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/03/ABD 实用技巧/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/ABD 实用技巧/" itemprop="commentsCount"></span>
+                <a href="/2016/09/03/proguard 混淆/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/proguard 混淆/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -468,12 +470,11 @@
       
         
           
-          一. 概述adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说，adb就是连接Android手机与PC端的桥梁，可以让用户在电脑上对手机进行全面的操作
-二. 命令
+          为了防止开发APP的重要code 被泄露，我们往往需要混淆（Obfuscation code ）， 也就是把方法，字段，包和类这些java 元素的名称改成无意义的名称，这样代码结构没有变化，还可以运行，但是想弄懂代码的架构却很难。 proguard 就是这样的混淆工具，它可以分析一组class 的结构，根据用户的配置，然后把这些class 文件的可以混淆java 元素名混淆掉。在分析class 的，同时他还有其他两个功能，删除无效代码（Shrinking 收缩），和代码进行优化 （Optimiz
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/09/03/ABD 实用技巧/#more" rel="contents">
+            <a class="btn" href="/2016/09/03/proguard 混淆/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -691,7 +692,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
