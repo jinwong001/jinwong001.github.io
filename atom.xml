@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-10-27T10:56:26.000Z</updated>
+  <updated>2016-10-27T10:57:47.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2016/10/27/ABD%20%E5%AE%9E%E7%94%A8%E6%8A%80%E5%B7%A7/"/>
     <id>http://yoursite.com/2016/10/27/ABD 实用技巧/</id>
     <published>2016-10-27T10:32:57.000Z</published>
-    <updated>2016-10-27T10:56:26.000Z</updated>
+    <updated>2016-10-27T10:57:47.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="一-概述"><a href="#一-概述" class="headerlink" title="一. 概述"></a>一. 概述</h2><p>adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。<br>借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说，adb就是连接Android手机与PC端的桥梁，可以让用户在电脑上对手机进行全面的操作</p>
 <h2 id="二-命令"><a href="#二-命令" class="headerlink" title="二. 命令"></a>二. 命令</h2><h3 id="1-启动关闭adb-服务"><a href="#1-启动关闭adb-服务" class="headerlink" title="1. 启动关闭adb 服务"></a>1. 启动关闭adb 服务</h3><ul>
