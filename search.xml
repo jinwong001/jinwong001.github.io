@@ -120,7 +120,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="演示模式"><a href="#演示模式" class="headerlink" title="演示模式"></a>演示模式</h2><p>View/Enter Presentation Mode<br>很方便作为演示代码<br>模板<br>Command+J能调出内置模板<br>|缩写|模板|<br>|—|—|<br>|fbc () |findViewById(R.id.);|<br>|fore  |<code>for(:){}</code>|<br>|fori | for (int i = 0; i &lt; ;i++) {}|<br>|gone|      .setVisibility(View.GONE);|<br>|visible|   .setVisibility(View.VISIBLE);|<br>|Toast|        Toast.makeText(AboutActivity.this, “”, Toast.LENGTH_SHORT).show();|<br>| logi|Log.i(TAG, “checkUpdate: “);|<br>| Sfmt| String.format(“”, );|<br>| fixme|       // FIXME: 16/9/4|<br>| todo|       // TODO: 16/9/4|</p>
+<h2 id="演示模式"><a href="#演示模式" class="headerlink" title="演示模式"></a>演示模式</h2><p>View/Enter Presentation Mode很方便作为演示代码模板<br>Command+J能调出内置模板<br> 下面为android studio 内置的模板<br>|缩写|模板|<br>|—|—|<br>|fbc () |findViewById(R.id.);|<br>|fore  |for(:){}|<br>|fori | for (int i = 0; i &lt; ;i++) {}|<br>|gone|      .setVisibility(View.GONE);|<br>|visible|   .setVisibility(View.VISIBLE);|<br>|Toast|        Toast.makeText(AboutActivity.this, “”, Toast.LENGTH_SHORT).show();|<br>| logi|Log.i(TAG, “checkUpdate: “);|<br>| Sfmt| String.format(“”, );|<br>| fixme|       // FIXME: 16/9/4|<br>| todo|       // TODO: 16/9/4|</p>
 <h2 id="后缀模板"><a href="#后缀模板" class="headerlink" title="后缀模板"></a>后缀模板</h2><table>
 <thead>
 <tr>
