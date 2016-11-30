@@ -4,6 +4,149 @@
   
     
     <entry>
+      <title><![CDATA[Android Studio快捷键总结]]></title>
+      <url>http://yoursite.com/2016/11/30/Android%20Studio%20%E6%8A%80%E5%B7%A7/</url>
+      <content type="html"><![CDATA[<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shift+shift</td>
+<td>search everywhere</td>
+</tr>
+<tr>
+<td>Command+Shift+A</td>
+<td>Search Action</td>
+</tr>
+<tr>
+<td>Command+E</td>
+<td>最近打开文件</td>
+</tr>
+<tr>
+<td>Command+Shift+E</td>
+<td>最近编辑文件</td>
+</tr>
+<tr>
+<td>Control+Tab</td>
+<td>各个界面切换</td>
+</tr>
+<tr>
+<td>Command+Option+Left/Right</td>
+<td>访问位置导航</td>
+</tr>
+<tr>
+<td>Option+Shift+UP/Down</td>
+<td>移动行</td>
+</tr>
+<tr>
+<td>Command+Shift+UP/Down</td>
+<td>移动行</td>
+</tr>
+<tr>
+<td>Option+F7</td>
+<td>查找其调用</td>
+</tr>
+<tr>
+<td>Command+P</td>
+<td>快速查看方法参数定义</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>预览查看API 文档</td>
+</tr>
+<tr>
+<td>Command+Y</td>
+<td>预览方法定义</td>
+</tr>
+<tr>
+<td>Command+Del</td>
+<td>删除</td>
+</tr>
+<tr>
+<td>Command+X</td>
+<td>剪贴</td>
+</tr>
+<tr>
+<td>Command+D</td>
+<td>复制上一行</td>
+</tr>
+<tr>
+<td>Command+Option+Shift+F8</td>
+<td>一次性断点</td>
+</tr>
+<tr>
+<td>Command+F</td>
+<td>项目大纲</td>
+</tr>
+<tr>
+<td>Control+G</td>
+<td>多重选择</td>
+</tr>
+<tr>
+<td>Option</td>
+<td>多重选择</td>
+</tr>
+<tr>
+<td>F3</td>
+<td>做书签</td>
+</tr>
+<tr>
+<td>Command+F3</td>
+<td>调出书签面板</td>
+</tr>
+<tr>
+<td>Control+T</td>
+<td>调出重构入口</td>
+</tr>
+<tr>
+<td>Command+Option+T</td>
+<td>包裹重构</td>
+</tr>
+<tr>
+<td>Command+Option+M</td>
+<td>重构提取方法</td>
+</tr>
+<tr>
+<td>Option+Enter</td>
+<td>快速提示（要活用）</td>
+</tr>
+<tr>
+<td>Command+J</td>
+<td>调出内置模板</td>
+</tr>
+</tbody>
+</table>
+<h2 id="演示模式"><a href="#演示模式" class="headerlink" title="演示模式"></a>演示模式</h2><p>View/Enter Presentation Mode<br>很方便作为演示代码<br>模板<br>Command+J能调出内置模板<br>|缩写|模板|<br>|—|—|<br>|fbc () |findViewById(R.id.);|<br>|fore  |<code>for(:){}</code>|<br>|fori | for (int i = 0; i &lt; ;i++) {}|<br>|gone|      .setVisibility(View.GONE);|<br>|visible|   .setVisibility(View.VISIBLE);|<br>|Toast|        Toast.makeText(AboutActivity.this, “”, Toast.LENGTH_SHORT).show();|<br>| logi|Log.i(TAG, “checkUpdate: “);|<br>| Sfmt| String.format(“”, );|<br>| fixme|       // FIXME: 16/9/4|<br>| todo|       // TODO: 16/9/4|</p>
+<h2 id="后缀模板"><a href="#后缀模板" class="headerlink" title="后缀模板"></a>后缀模板</h2><table>
+<thead>
+<tr>
+<th>缩写</th>
+<th>模板</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>list.for</td>
+<td>for (Map<string, object=""> stringObjectMap : list) {}</string,></td>
+</tr>
+<tr>
+<td>list.fori</td>
+<td>for (int i = 0; i &lt; list.size(); i++) { }</td>
+</tr>
+<tr>
+<td>list.forr</td>
+<td>for (int i = list.size() - 1; i &gt;= 0; i–) { }</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[ABD实用命名]]></title>
       <url>http://yoursite.com/2016/10/27/ABD%20%E5%AE%9E%E7%94%A8%E6%8A%80%E5%B7%A7/</url>
       <content type="html"><![CDATA[<h2 id="一-概述"><a href="#一-概述" class="headerlink" title="一. 概述"></a>一. 概述</h2><p>adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。<br>借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说，adb就是连接Android手机与PC端的桥梁，可以让用户在电脑上对手机进行全面的操作</p>

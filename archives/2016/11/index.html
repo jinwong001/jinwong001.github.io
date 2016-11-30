@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android Studio,aar," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -86,22 +86,15 @@
 
 
 
-<meta name="description" content="何为aar？大家都知道jar，区别就是一个jar文件不能包含资源文件，比如一些drawable文件、xml资源文件之类的，而aar包含这些文件, 通过gradle 我们可以将Android Libaray 项目直接打包成arr,然后向引用jar 文件一样方便使用。
-##生产aar
-首先Android Library项目的 首先Android Library项目的gradle脚本只需要在开头声明1a">
-<meta property="og:type" content="article">
-<meta property="og:title" content="aar 探究">
-<meta property="og:url" content="http://yoursite.com/2016/09/03/aar/index.html">
+<meta name="description" content="To be a better man">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jinwong001">
+<meta property="og:url" content="http://yoursite.com/archives/2016/11/index.html">
 <meta property="og:site_name" content="Jinwong001">
-<meta property="og:description" content="何为aar？大家都知道jar，区别就是一个jar文件不能包含资源文件，比如一些drawable文件、xml资源文件之类的，而aar包含这些文件, 通过gradle 我们可以将Android Libaray 项目直接打包成arr,然后向引用jar 文件一样方便使用。
-##生产aar
-首先Android Library项目的 首先Android Library项目的gradle脚本只需要在开头声明1a">
-<meta property="og:updated_time" content="2016-09-03T13:07:59.000Z">
+<meta property="og:description" content="To be a better man">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="aar 探究">
-<meta name="twitter:description" content="何为aar？大家都知道jar，区别就是一个jar文件不能包含资源文件，比如一些drawable文件、xml资源文件之类的，而aar包含这些文件, 通过gradle 我们可以将Android Libaray 项目直接打包成arr,然后向引用jar 文件一样方便使用。
-##生产aar
-首先Android Library项目的 首先Android Library项目的gradle脚本只需要在开头声明1a">
+<meta name="twitter:title" content="Jinwong001">
+<meta name="twitter:description" content="To be a better man">
 
 
 
@@ -122,9 +115,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/09/03/aar/"/>
+  <link rel="canonical" href="http://yoursite.com/archives/2016/11/"/>
 
-  <title> aar 探究 | Jinwong001 </title>
+  <title> 归档 | Jinwong001 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -155,7 +148,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  page-archive  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -256,173 +249,66 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-collapse">
+    <span class="archive-move-on"></span>
+
+    <span class="archive-page-counter">
+      
+      
+      
+        
+      
+      嗯..! 目前共计 14 篇日志。 继续努力。
+    </span>
+
     
 
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                aar 探究
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-03T20:56:00+08:00" content="2016-09-03">
-              2016-09-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/03/aar/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/aar/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
-      
-        <p>何为aar？大家都知道jar，区别就是一个jar文件不能包含资源文件，比如一些drawable文件、xml资源文件之类的，<br>而aar包含这些文件, 通过gradle 我们可以将Android Libaray 项目直接打包成arr,然后向引用jar 文件一样方便使用。</p>
-<p>##生产aar</p>
-<p>首先Android Library项目的 首先Android Library项目的gradle脚本只需要在开头声明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apply plugin:&apos;com.android.library&apos;</div></pre></td></tr></table></figure></p>
-<p>之后就和导出apk文件一样的方法，执行 ./gradlew assembleRelease，然后就可以在 build/outputs/aar 文件夹里生成aar文件</p>
-<p>##aar 导入方式</p>
-<p>###导入方式一：<br>1、 打开 Project Structure，添加一个新 Module，然后选择 Import <em>.JAR or </em>.AAR Package 的方式导入：</p>
-<p>2、 导入后，在你的工程下面，会生成一个文件夹，里面是 aar 文件以及 Android Studio 的配置文件。</p>
-<p>接着可以在 gradle 中配置依赖了，其他 Module 可以引用这个 Module 了，依赖方式使用 compile project 的方式即可。</p>
-<p>缺点： 被依赖的 aar 无法 F3 跟进去，无法看到资源文件内容以及目录层级等等缺陷。</p>
-<p>###导入方式二：配置依赖</p>
-<ul>
-<li>首先需要将 aar 文件放入引用 Module 的 libs 目录下，和一般的 jar 文件类似。</li>
-<li><p>在app的build.gradle文件添加如下内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">repositories &#123;</div><div class="line">    flatDir &#123;</div><div class="line">        dirs &apos;libs&apos; //this way we can find the .aar file in libs folder</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>项目中添加一句gradle依赖便方便的引用了该library</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">compile(name: &apos;xxx&apos;, ext: &apos;aar&apos;)。</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>##arar上传</p>
-
-      
-    </div>
-
-    <div>
       
         
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Android-Studio/" rel="tag">#Android Studio</a>
-          
-            <a href="/tags/aar/" rel="tag">#aar</a>
-          
+        <div class="collection-title">
+          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
         </div>
       
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/09/03/断点调试/" rel="next" title="断点调试">
-                <i class="fa fa-chevron-left"></i> 断点调试
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/09/03/Android 6.0 权限/" rel="prev" title="Android 6.0 权限">
-                Android 6.0 权限 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
       
 
       
-      
-    </footer>
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
+        
+            <a class="post-title-link" href="/2016/11/30/Android Studio 技巧/" itemprop="url">
+              
+                <span itemprop="name">Android Studio快捷键总结</span>
+              
+            </a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-11-30T01:49:18Z"
+              content="2016-11-30" >
+          11-30
+        </time>
+      </div>
+
+    </header>
   </article>
 
 
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+    
+
+  </section>
+
+  
+
 
 
           </div>
@@ -430,14 +316,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2016/09/03/aar/"
-           data-title="aar 探究" data-url="http://yoursite.com/2016/09/03/aar/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -457,17 +335,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/13974059.jpeg"
@@ -562,17 +431,6 @@
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <p class="post-toc-empty">此文章未包含目录</p>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -676,9 +534,11 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
+  
+    <script type="text/javascript" id="motion.page.archive">
+      $('.archive-year').velocity('transition.slideLeftIn');
+    </script>
+  
 
 
   

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-10-27T10:57:47.000Z</updated>
+  <updated>2016-11-30T01:52:03.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,173 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Android Studio快捷键总结</title>
+    <link href="http://yoursite.com/2016/11/30/Android%20Studio%20%E6%8A%80%E5%B7%A7/"/>
+    <id>http://yoursite.com/2016/11/30/Android Studio 技巧/</id>
+    <published>2016-11-30T01:49:18.000Z</published>
+    <updated>2016-11-30T01:52:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shift+shift</td>
+<td>search everywhere</td>
+</tr>
+<tr>
+<td>Command+Shift+A</td>
+<td>Search Action</td>
+</tr>
+<tr>
+<td>Command+E</td>
+<td>最近打开文件</td>
+</tr>
+<tr>
+<td>Command+Shift+E</td>
+<td>最近编辑文件</td>
+</tr>
+<tr>
+<td>Control+Tab</td>
+<td>各个界面切换</td>
+</tr>
+<tr>
+<td>Command+Option+Left/Right</td>
+<td>访问位置导航</td>
+</tr>
+<tr>
+<td>Option+Shift+UP/Down</td>
+<td>移动行</td>
+</tr>
+<tr>
+<td>Command+Shift+UP/Down</td>
+<td>移动行</td>
+</tr>
+<tr>
+<td>Option+F7</td>
+<td>查找其调用</td>
+</tr>
+<tr>
+<td>Command+P</td>
+<td>快速查看方法参数定义</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>预览查看API 文档</td>
+</tr>
+<tr>
+<td>Command+Y</td>
+<td>预览方法定义</td>
+</tr>
+<tr>
+<td>Command+Del</td>
+<td>删除</td>
+</tr>
+<tr>
+<td>Command+X</td>
+<td>剪贴</td>
+</tr>
+<tr>
+<td>Command+D</td>
+<td>复制上一行</td>
+</tr>
+<tr>
+<td>Command+Option+Shift+F8</td>
+<td>一次性断点</td>
+</tr>
+<tr>
+<td>Command+F</td>
+<td>项目大纲</td>
+</tr>
+<tr>
+<td>Control+G</td>
+<td>多重选择</td>
+</tr>
+<tr>
+<td>Option</td>
+<td>多重选择</td>
+</tr>
+<tr>
+<td>F3</td>
+<td>做书签</td>
+</tr>
+<tr>
+<td>Command+F3</td>
+<td>调出书签面板</td>
+</tr>
+<tr>
+<td>Control+T</td>
+<td>调出重构入口</td>
+</tr>
+<tr>
+<td>Command+Option+T</td>
+<td>包裹重构</td>
+</tr>
+<tr>
+<td>Command+Option+M</td>
+<td>重构提取方法</td>
+</tr>
+<tr>
+<td>Option+Enter</td>
+<td>快速提示（要活用）</td>
+</tr>
+<tr>
+<td>Command+J</td>
+<td>调出内置模板</td>
+</tr>
+</tbody>
+</table>
+<h2 id="演示模式"><a href="#演示模式" class="headerlink" title="演示模式"></a>演示模式</h2><p>View/Enter Presentation Mode<br>很方便作为演示代码<br>模板<br>Command+J能调出内置模板<br>|缩写|模板|<br>|—|—|<br>|fbc () |findViewById(R.id.);|<br>|fore  |<code>for(:){}</code>|<br>|fori | for (int i = 0; i &lt; ;i++) {}|<br>|gone|      .setVisibility(View.GONE);|<br>|visible|   .setVisibility(View.VISIBLE);|<br>|Toast|        Toast.makeText(AboutActivity.this, “”, Toast.LENGTH_SHORT).show();|<br>| logi|Log.i(TAG, “checkUpdate: “);|<br>| Sfmt| String.format(“”, );|<br>| fixme|       // FIXME: 16/9/4|<br>| todo|       // TODO: 16/9/4|</p>
+<h2 id="后缀模板"><a href="#后缀模板" class="headerlink" title="后缀模板"></a>后缀模板</h2><table>
+<thead>
+<tr>
+<th>缩写</th>
+<th>模板</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>list.for</td>
+<td>for (Map<string, object=""> stringObjectMap : list) {}</string,></td>
+</tr>
+<tr>
+<td>list.fori</td>
+<td>for (int i = 0; i &lt; list.size(); i++) { }</td>
+</tr>
+<tr>
+<td>list.forr</td>
+<td>for (int i = list.size() - 1; i &gt;= 0; i–) { }</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;快捷键&quot;&gt;&lt;a href=&quot;#快捷键&quot; class=&quot;headerlink&quot; title=&quot;快捷键&quot;&gt;&lt;/a&gt;快捷键&lt;/h2&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;快捷键&lt;/th&gt;
+&lt;th&gt;用途&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
+    
+      <category term="Android Studio" scheme="http://yoursite.com/tags/Android-Studio/"/>
+    
+  </entry>
   
   <entry>
     <title>ABD实用命名</title>
@@ -357,9 +524,9 @@
       <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
     
     
-      <category term="aar" scheme="http://yoursite.com/tags/aar/"/>
-    
       <category term="Android Studio" scheme="http://yoursite.com/tags/Android-Studio/"/>
+    
+      <category term="aar" scheme="http://yoursite.com/tags/aar/"/>
     
   </entry>
   
