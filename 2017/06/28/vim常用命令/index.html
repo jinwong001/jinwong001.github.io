@@ -68,10 +68,12 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="adb," />
+  <meta name="keywords" content="vim," />
 
 
 
+
+  
 
 
   <link rel="alternate" href="/atom.xml" title="Jinwong001" type="application/atom+xml" />
@@ -86,16 +88,31 @@
 
 
 
-<meta name="description" content="一. 概述adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说">
+<meta name="description" content="vim 是一个程序开发工具而不是文字处理软件
+ 基本上 vi/vim 共分为三种模式，分别是命令模式（Command mode），插入模式（Insert mode）和底线命令模式（Last line mode
+ 这三种模式的作用分别是：
+1. 命令模式 用户刚刚启动  vi/vim，便进入了命令模式。 不能输入字符，敲击键盘动作会被Vim识别为命令，常用命令有i,x,:
+
+i 切换到插入模式，以">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ABD实用命名">
-<meta property="og:url" content="http://yoursite.com/2016/10/27/ABD 实用技巧/index.html">
+<meta property="og:title" content="vim常用简单命令">
+<meta property="og:url" content="http://yoursite.com/2017/06/28/vim常用命令/index.html">
 <meta property="og:site_name" content="Jinwong001">
-<meta property="og:description" content="一. 概述adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说">
-<meta property="og:updated_time" content="2016-10-27T10:57:47.000Z">
+<meta property="og:description" content="vim 是一个程序开发工具而不是文字处理软件
+ 基本上 vi/vim 共分为三种模式，分别是命令模式（Command mode），插入模式（Insert mode）和底线命令模式（Last line mode
+ 这三种模式的作用分别是：
+1. 命令模式 用户刚刚启动  vi/vim，便进入了命令模式。 不能输入字符，敲击键盘动作会被Vim识别为命令，常用命令有i,x,:
+
+i 切换到插入模式，以">
+<meta property="og:updated_time" content="2017-06-28T02:59:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ABD实用命名">
-<meta name="twitter:description" content="一. 概述adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说">
+<meta name="twitter:title" content="vim常用简单命令">
+<meta name="twitter:description" content="vim 是一个程序开发工具而不是文字处理软件
+ 基本上 vi/vim 共分为三种模式，分别是命令模式（Command mode），插入模式（Insert mode）和底线命令模式（Last line mode
+ 这三种模式的作用分别是：
+1. 命令模式 用户刚刚启动  vi/vim，便进入了命令模式。 不能输入字符，敲击键盘动作会被Vim识别为命令，常用命令有i,x,:
+
+i 切换到插入模式，以">
 
 
 
@@ -116,9 +133,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/10/27/ABD 实用技巧/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/28/vim常用命令/"/>
 
-  <title> ABD实用命名 | Jinwong001 </title>
+  <title> vim常用简单命令 | Jinwong001 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -271,7 +288,7 @@
             
             
               
-                ABD实用命名
+                vim常用简单命令
               
             
           </h1>
@@ -283,8 +300,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-27T18:32:57+08:00" content="2016-10-27">
-              2016-10-27
+            <time itemprop="dateCreated" datetime="2017-06-28T10:52:07+08:00" content="2017-06-28">
+              2017-06-28
             </time>
           </span>
 
@@ -297,8 +314,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
                   </a>
                 </span>
 
@@ -313,8 +330,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/10/27/ABD 实用技巧/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/27/ABD 实用技巧/" itemprop="commentsCount"></span>
+                <a href="/2017/06/28/vim常用命令/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/28/vim常用命令/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -337,80 +354,35 @@
       
 
       
-        <h2 id="一-概述"><a href="#一-概述" class="headerlink" title="一. 概述"></a>一. 概述</h2><p>adb的全称为Android Debug Bridge，就是起到调试桥的作用。通过adb我们可以在Eclipse中方面通过DDMS来调试Android程序，Android studio 可以直接在terminal 中操作adb，说白了就是debug工具。。<br>借助adb工具，我们可以管理设备或手机模拟器的状态。还可以进行很多手机操作，如安装软件、系统升级、运行shell命令等等。其实简而言说，adb就是连接Android手机与PC端的桥梁，可以让用户在电脑上对手机进行全面的操作</p>
-<h2 id="二-命令"><a href="#二-命令" class="headerlink" title="二. 命令"></a>二. 命令</h2><h3 id="1-启动关闭adb-服务"><a href="#1-启动关闭adb-服务" class="headerlink" title="1. 启动关闭adb 服务"></a>1. 启动关闭adb 服务</h3><ul>
-<li>adb start-server    启动adb 服务</li>
-<li>adb kill-server     关闭adb 服</li>
-</ul>
-<h3 id="2-查询设备-adb-devices"><a href="#2-查询设备-adb-devices" class="headerlink" title="2. 查询设备 adb devices"></a>2. 查询设备 adb devices</h3><ul>
-<li>adb devices</li>
-</ul>
-<h3 id="3-安装软件-adb-install"><a href="#3-安装软件-adb-install" class="headerlink" title="3. 安装软件 adb install "></a>3. 安装软件 adb install <apk文件路径></apk文件路径></h3><ul>
-<li>使用apk名安装<br>adb install c:\document\app.apk<br>也使用package 名安装<br>adb install com.company.app</li>
-<li>重新安装，保留数据和缓存文件<br>adb install -r app.apk</li>
-<li>安装到sd卡中<br>adb install -s app.apk</li>
-<li>多设备安装<br>adb -s 8e582a20  install app.apk<br>-s 后面是设备号，可以通过 adb devices 得到设备列表。</li>
-</ul>
-<h3 id="4-卸载-adb-uninstall"><a href="#4-卸载-adb-uninstall" class="headerlink" title="4. 卸载 adb uninstall"></a>4. 卸载 adb uninstall</h3><ul>
-<li>adb devices 确认设备</li>
-<li>adb shell pm list packages 找到安装包</li>
-<li>adb uninstall com.company.app<br>卸载某一设备上app,不保留数据和缓存目录</li>
-<li>adb -s 8e582a20  uninstall app.apk<br>卸载某一设备上app,保留数据和缓存目录</li>
-<li>adb -s 8e582a20  uninstall -k app.apk</li>
-</ul>
-<h3 id="5-启动-停止服务"><a href="#5-启动-停止服务" class="headerlink" title="5. 启动/停止服务"></a>5. 启动/停止服务</h3><p>当有事adb服务异常时，需要重新停止启动服务</p>
+        <p> vim 是一个程序开发工具而不是文字处理软件</p>
+<p> 基本上 vi/vim 共分为三种模式，分别是命令模式（Command mode），插入模式（Insert mode）和底线命令模式（Last line mode</p>
+<p> 这三种模式的作用分别是：</p>
+<h2 id="1-命令模式"><a href="#1-命令模式" class="headerlink" title="1. 命令模式"></a>1. 命令模式</h2><p> 用户刚刚启动  vi/vim，便进入了命令模式。<br> 不能输入字符，敲击键盘动作会被Vim识别为命令，常用命令有i,x,:</p>
 <ul>
-<li>启动adb server:<br>adb start-server</li>
-<li>停止adb server:<br>adb kill-server</li>
-</ul>
-<h3 id="6-查看日志logcat"><a href="#6-查看日志logcat" class="headerlink" title="6. 查看日志logcat"></a>6. 查看日志logcat</h3><p>adb logcat</p>
-<ul>
-<li>显示tag为“xyz”的log信息<br>adb logcat -s xyz</li>
-<li>将logx信息保存到手机指定目录下<br>adb logcat -f /sdcard/log.txt</li>
-<li>输出log详细时间<br>adb logcat -v time</li>
-<li>利用grep 过滤log<br>adb logcat |grep xyz   </li>
-<li>将logcat 输出保存到pc中文本中<br>adb logcat &gt;log.txt</li>
-</ul>
-<h3 id="7、查看日志分析bugreport"><a href="#7、查看日志分析bugreport" class="headerlink" title="7、查看日志分析bugreport"></a>7、查看日志分析bugreport</h3><p>bugreport是Android 自带的日志分析系统，包含系统启动log,系统状态和详细的进程、虚拟机、缓存、内存等信息<br>adb bugreport<br>将bugreport导出<br>adb bugreport &gt; bugreport.log</p>
-<h3 id="8-重启"><a href="#8-重启" class="headerlink" title="8. 重启"></a>8. 重启</h3><p>adb reboot</p>
-<h3 id="9-数据传输"><a href="#9-数据传输" class="headerlink" title="9. 数据传输"></a>9. 数据传输</h3><ul>
-<li><p>adb push &lt;本地路径&gt; &lt;远程路径&gt;<br>用push命令可以把本机电脑上的文件或者文件夹复制到设备(手机)</p>
+<li>i 切换到插入模式，以输入字符。</li>
+<li>x 删除当前光标所在处的字符</li>
+<li>dd 删除游标所在的那一整行</li>
+<li>yy 复制游标所在的那一行</li>
+<li>0  这是数字『 0 』：移动到这一行的最前面字符处</li>
+<li>$ 移动到这一行的最后面字符处</li>
+<li>G 移动到这个档案的最后一行</li>
+<li>nG 移动到这个档案的第 n 行</li>
+<li>gg 移动到这个档案的第一行，相当于 1G</li>
+<li>n<space> 光标向右移动 n 个字符</space></li>
+<li>n<enter> 光标向下移动 n 行</enter></li>
+<li><p>: 切换到底线命令模式，以在最底一行输入命令。</p>
+<h2 id="2-底线命令模式"><a href="#2-底线命令模式" class="headerlink" title="2. 底线命令模式"></a>2. 底线命令模式</h2><p>在命令模式下按下:（英文冒号）就进入了底线命令模式。按ESC键可随时退出底线命令模式。<br>常用命令为：</p>
 </li>
-<li><p>adb pull &lt;远程路径&gt; &lt;本地路径&gt;<br>用pull命令可以把设备(手机)上的文件或者文件夹复制到本机电脑</p>
+<li>q 退出程序</li>
+<li>w 保存文件<ul>
+<li>在命令模式下按下i就进入了输入模式。ESC，退出输入模式，切换到命令模式</li>
+</ul>
 </li>
 </ul>
-<h3 id="10-查看adb版本"><a href="#10-查看adb版本" class="headerlink" title="10. 查看adb版本"></a>10. 查看adb版本</h3><p>adb version</p>
-<h3 id="11、获取设备的ID和序列号"><a href="#11、获取设备的ID和序列号" class="headerlink" title="11、获取设备的ID和序列号"></a>11、获取设备的ID和序列号</h3><p>adb get-product<br>adb get-serialno</p>
-<h3 id="12-shell命令"><a href="#12-shell命令" class="headerlink" title="12. shell命令"></a>12. shell命令</h3><p>　adb shell 就可以进入设备或模拟器的shell环境中，在这个Linux Shell中，你可以执行各种Linux的命令，另外如果只想执行一条shell命令，例如：<br>adb shell dmesg会打印出内核的调试信息。</p>
-<h4 id="1-包管理"><a href="#1-包管理" class="headerlink" title="1. 包管理"></a>1. 包管理</h4><ul>
-<li>列出手机中所有app包名<br>adb shell pm list packages</li>
-<li>列出手机系统应用所有包名<br>adb shell pm list packages -s</li>
-<li>列出手机第三方应用包名<br>adb shell pm list packages -3<br>过滤包名<br>adb shell pm list packages|grep qq</li>
+<h2 id="3-输入模式"><a href="#3-输入模式" class="headerlink" title="3. 输入模式"></a>3. 输入模式</h2><p>在命令模式下按下i就进入了输入模式。在输入模式可以编辑文本内容。</p>
+<ul>
+<li>ESC，退出输入模式，切换到命令模式</li>
 </ul>
-<h4 id="2-手机录屏"><a href="#2-手机录屏" class="headerlink" title="2. 手机录屏"></a>2. 手机录屏</h4><ul>
-<li>默认录制180s,录制比例为4Mbps<br>adb shell screenrecord  /sdcard/video.mp4                 </li>
-<li>指定视频分辨率<br>adb shell screenrecord –size 1280*720 /sdcard/video.mp4   </li>
-<li>指定时间<br>adb shell screeenrecord –time-limit 200 /sdcard/video.mp4</li>
-</ul>
-<h4 id="3、电量"><a href="#3、电量" class="headerlink" title="3、电量"></a>3、电量</h4><ul>
-<li>获取手机电池信息<br>adb shell dumpsys battery <package name=""></package></li>
-<li>获取手机电量消耗<br>adb shell dumpsys batterystats  com.Package.name</li>
-<li>获取某个应用的电量消耗<br>adb shell dumpsys batterystats  com.Package.name</li>
-<li>将电量信息输出到文件中<br>adb shell dumpsys batterystats com.package.nae &gt; battery.txt</li>
-</ul>
-<h4 id="3-其他adb-shell-命令"><a href="#3-其他adb-shell-命令" class="headerlink" title="3. 其他adb shell 命令"></a>3. 其他adb shell 命令</h4><ul>
-<li>清理应用数据和缓存<br>adb shell pm clear <packagename>      </packagename></li>
-<li>启动应用<br>adb shell am start -n com.company.demo/.SplashActivity     </li>
-<li>强行停止应用<br>adb shell am force-stop <packagename>       </packagename></li>
-<li>查看屏幕分辨率<br>adb shell wm size</li>
-<li>查看屏幕密度<br>adb shell wm density</li>
-<li>查看帮助指令<br>adb shell pm help<br>adb shell am help </li>
-<li>截屏<br>adb shell screencap -p /sdcard/screenshot.png</li>
-<li>获取内存状况<br>adb shell dumpsys meminfo <package name=""></package></li>
-</ul>
-<blockquote>
-<p>更多的参考：<br><a href="https://github.com/mzlogin/awesome-adb" target="_blank" rel="external">https://github.com/mzlogin/awesome-adb</a></p>
-</blockquote>
 
       
     </div>
@@ -433,7 +405,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/adb/" rel="tag">#adb</a>
+            <a href="/tags/vim/" rel="tag">#vim</a>
           
         </div>
       
@@ -442,17 +414,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/09/03/数组类型不同解析问题探究/" rel="next" title="数组类型不同解析问题探究">
-                <i class="fa fa-chevron-left"></i> 数组类型不同解析问题探究
+              <a href="/2017/06/27/二维码扫码优化/" rel="next" title="二维码扫码优化">
+                <i class="fa fa-chevron-left"></i> 二维码扫码优化
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/11/30/Android Studio 技巧/" rel="prev" title="Android Studio快捷键总结">
-                Android Studio快捷键总结 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -478,8 +446,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/10/27/ABD 实用技巧/"
-           data-title="ABD实用命名" data-url="http://yoursite.com/2016/10/27/ABD 实用技巧/">
+      <div class="ds-thread" data-thread-key="2017/06/28/vim常用命令/"
+           data-title="vim常用简单命令" data-url="http://yoursite.com/2017/06/28/vim常用命令/">
       </div>
     
   </div>
@@ -615,7 +583,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-概述"><span class="nav-number">1.</span> <span class="nav-text">一. 概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-命令"><span class="nav-number">2.</span> <span class="nav-text">二. 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-启动关闭adb-服务"><span class="nav-number">2.1.</span> <span class="nav-text">1. 启动关闭adb 服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-查询设备-adb-devices"><span class="nav-number">2.2.</span> <span class="nav-text">2. 查询设备 adb devices</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-安装软件-adb-install"><span class="nav-number">2.3.</span> <span class="nav-text">3. 安装软件 adb install </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-卸载-adb-uninstall"><span class="nav-number">2.4.</span> <span class="nav-text">4. 卸载 adb uninstall</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-启动-停止服务"><span class="nav-number">2.5.</span> <span class="nav-text">5. 启动/停止服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-查看日志logcat"><span class="nav-number">2.6.</span> <span class="nav-text">6. 查看日志logcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、查看日志分析bugreport"><span class="nav-number">2.7.</span> <span class="nav-text">7、查看日志分析bugreport</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-重启"><span class="nav-number">2.8.</span> <span class="nav-text">8. 重启</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-数据传输"><span class="nav-number">2.9.</span> <span class="nav-text">9. 数据传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-查看adb版本"><span class="nav-number">2.10.</span> <span class="nav-text">10. 查看adb版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11、获取设备的ID和序列号"><span class="nav-number">2.11.</span> <span class="nav-text">11、获取设备的ID和序列号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-shell命令"><span class="nav-number">2.12.</span> <span class="nav-text">12. shell命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-包管理"><span class="nav-number">2.12.1.</span> <span class="nav-text">1. 包管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-手机录屏"><span class="nav-number">2.12.2.</span> <span class="nav-text">2. 手机录屏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、电量"><span class="nav-number">2.12.3.</span> <span class="nav-text">3、电量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-其他adb-shell-命令"><span class="nav-number">2.12.4.</span> <span class="nav-text">3. 其他adb shell 命令</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-命令模式"><span class="nav-number">1.</span> <span class="nav-text">1. 命令模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-底线命令模式"><span class="nav-number">2.</span> <span class="nav-text">2. 底线命令模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-输入模式"><span class="nav-number">3.</span> <span class="nav-text">3. 输入模式</span></a></li></ol></div>
             
           </div>
         </section>

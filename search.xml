@@ -4,6 +4,41 @@
   
     
     <entry>
+      <title><![CDATA[vim常用简单命令]]></title>
+      <url>http://yoursite.com/2017/06/28/vim%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+      <content type="html"><![CDATA[<p> vim 是一个程序开发工具而不是文字处理软件</p>
+<p> 基本上 vi/vim 共分为三种模式，分别是命令模式（Command mode），插入模式（Insert mode）和底线命令模式（Last line mode</p>
+<p> 这三种模式的作用分别是：</p>
+<h2 id="1-命令模式"><a href="#1-命令模式" class="headerlink" title="1. 命令模式"></a>1. 命令模式</h2><p> 用户刚刚启动  vi/vim，便进入了命令模式。<br> 不能输入字符，敲击键盘动作会被Vim识别为命令，常用命令有i,x,:</p>
+<ul>
+<li>i 切换到插入模式，以输入字符。</li>
+<li>x 删除当前光标所在处的字符</li>
+<li>dd 删除游标所在的那一整行</li>
+<li>yy 复制游标所在的那一行</li>
+<li>0  这是数字『 0 』：移动到这一行的最前面字符处</li>
+<li>$ 移动到这一行的最后面字符处</li>
+<li>G 移动到这个档案的最后一行</li>
+<li>nG 移动到这个档案的第 n 行</li>
+<li>gg 移动到这个档案的第一行，相当于 1G</li>
+<li>n<space> 光标向右移动 n 个字符</space></li>
+<li>n<enter> 光标向下移动 n 行</enter></li>
+<li><p>: 切换到底线命令模式，以在最底一行输入命令。</p>
+<h2 id="2-底线命令模式"><a href="#2-底线命令模式" class="headerlink" title="2. 底线命令模式"></a>2. 底线命令模式</h2><p>在命令模式下按下:（英文冒号）就进入了底线命令模式。按ESC键可随时退出底线命令模式。<br>常用命令为：</p>
+</li>
+<li>q 退出程序</li>
+<li>w 保存文件<ul>
+<li>在命令模式下按下i就进入了输入模式。ESC，退出输入模式，切换到命令模式</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-输入模式"><a href="#3-输入模式" class="headerlink" title="3. 输入模式"></a>3. 输入模式</h2><p>在命令模式下按下i就进入了输入模式。在输入模式可以编辑文本内容。</p>
+<ul>
+<li>ESC，退出输入模式，切换到命令模式</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[二维码扫码优化]]></title>
       <url>http://yoursite.com/2017/06/27/%E4%BA%8C%E7%BB%B4%E7%A0%81%E6%89%AB%E7%A0%81%E4%BC%98%E5%8C%96/</url>
       <content type="html"><![CDATA[<h2 id="1-二维码扫码库介绍"><a href="#1-二维码扫码库介绍" class="headerlink" title="1. 二维码扫码库介绍"></a>1. 二维码扫码库介绍</h2><p>二维码又称QR Code，QR全称Quick Response，是一个近几年来移动设备上超流行的一种编码方式，它比传统的Bar Code条形码能存更多的信息，也能表示更多的数据类型。</p>
